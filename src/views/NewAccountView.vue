@@ -21,18 +21,8 @@
                        @event-password-updated="setUserPassword"/>
         <EmailInput :email="user.email" :email-error="emailError"
                       @event-email-updated = "setUserEmail"/>
-        <!-- Honeypot field -->
-        <input v-model="user.website" type="text" class="hp-field" autocomplete="off" tabindex="-1" />
-
-        <!-- hCaptcha -->
-        <div class="mb-3">
-          <div ref="hcaptchaEl"></div>
-          <div v-if="captchaError" class="text-danger mt-2">{{ captchaError }}</div>
-        </div>
-
         <div class="form-floating">
-          <button @click="addNewUser" type="button" class="btn btn-custom btn-large"
-                  :disabled="!captchaToken">Sign up!</button>
+          <button @click="addNewUser" type="button" class="btn btn-custom btn-large">Sign up!</button>
         </div>
       </div>
     </div>
@@ -43,14 +33,6 @@ h1 {
   margin-top: 30px; /* to push the h1 lower */
   margin-bottom: 40px; /*to push the next block lower*/
 }
-.hp-field {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
 </style>
 
 <script>
@@ -65,7 +47,6 @@ import UsernameService from "@/services/UsernameService";
 import PasswordService from "@/services/PasswordService";
 import EmailService from "@/services/EmailService";
 
-
 export default {
   name: 'NewAccountView',
   components: {EmailInput, PasswordInput, UsernameInput, LoginCreateAccountMenu, AlertSuccess},
@@ -74,9 +55,6 @@ export default {
       alertSuccessMessage: '',
       displayAddUserForm: true,
 
-      captchaToken: '',
-      captchaError: '',
-
       usernameError: '',
       passwordError: '',
       emailError: '',
@@ -84,8 +62,7 @@ export default {
       user: {
         username: '',
         password: '',
-        email: '',
-        website: '' // honeypot
+        email: ''
       },
 
       errorResponse: {
@@ -101,29 +78,18 @@ export default {
       this.validateFromInput()
       if (!this.formInputIsCorrect()) return
 
-      this.captchaError = ''
-      if (!this.captchaToken) {
-        this.captchaError = 'Please complete the captcha.'
-        return
-      }
       const payload = {
         username: this.user.username.trim(),
         password: this.user.password,
-        email: this.user.email.trim(),
-        website: this.user.website, // honeypot
-        captchaToken: this.captchaToken
+        email: this.user.email.trim()
       }
 
       UserService.sendPostUserRequest(payload)
-            .then(() => this.handleAddNewUserResponse(payload.username))
-            .catch(error => this.handleAddNewUserError(error))
+          .then(() => this.handleAddNewUserResponse(payload.username))
+          .catch(error => this.handleAddNewUserError(error))
     },
 
     handleAddNewUserResponse(trimmedUsername) {
-      this.user.website = ''
-      this.captchaToken = ''
-      this.renderHcaptcha()
-
       this.hideAddUserForm()
       this.alertSuccessMessage = 'New user "' + trimmedUsername + '" added! You can now login'
       setTimeout(NavigationService.navigateToLoginView, 8000)
@@ -137,19 +103,16 @@ export default {
       this.usernameError = UsernameService.validateSignupUsername(this.user.username)
       this.passwordError = PasswordService.validateSignupPassword(this.user.password)
       this.emailError = EmailService.validateSignupEmail(this.user.email)
-      },
+    },
 
     formInputIsCorrect() {
       return this.usernameError === '' && this.passwordError === '' && this.emailError === ''
     },
 
     handleAddNewUserError(error) {
-      this.user.website = ''
-      this.captchaToken = ''
-      this.renderHcaptcha()
 
       const status = error?.response?.status
-      this.errorResponse = error?.response?.data || { message: 'Unknown error', errorCode: 0 }
+      this.errorResponse = error?.response?.data || {message: 'Unknown error', errorCode: 0}
 
       if (status === 403 && this.errorResponse.errorCode === 222) {
         this.usernameError = this.errorResponse.message
@@ -182,68 +145,7 @@ export default {
     },
     setUserEmail(email) {
       this.user.email = email
-    },
-    loadHcaptchaScriptIfNeeded() {
-      return new Promise((resolve, reject) => {
-        if (window.hcaptcha) return resolve()
-
-        const existing = document.querySelector('script[data-hcaptcha="true"]')
-        if (existing) {
-          existing.addEventListener('load', resolve)
-          existing.addEventListener('error', reject)
-          return
-        }
-
-        const script = document.createElement('script')
-        script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit'
-        script.async = true
-        script.defer = true
-        script.setAttribute('data-hcaptcha', 'true')
-        script.onload = resolve
-        script.onerror = reject
-        document.head.appendChild(script)
-      })
-    },
-
-    renderHcaptcha() {
-      this.captchaToken = ''
-      this.captchaError = ''
-
-      const el = this.$refs.hcaptchaEl
-      if (!el) return
-      el.innerHTML = ''
-
-      const SITE_KEY = process.env.VUE_APP_HCAPTCHA_SITE_KEY
-      if (!SITE_KEY) {
-        this.captchaError = 'Captcha site key is missing. Check .env.local'
-        return
-      }
-
-      window.hcaptcha.render(el, {
-        sitekey: SITE_KEY,
-        callback: (token) => {
-          this.captchaToken = token
-          this.captchaError = ''
-        },
-        'expired-callback': () => {
-          this.captchaToken = ''
-          this.captchaError = 'Captcha expired. Please try again.'
-        },
-        'error-callback': () => {
-          this.captchaToken = ''
-          this.captchaError = 'Captcha failed to load. Please refresh.'
-        }
-      })
-    },
-
-  },
-  mounted() {
-    this.loadHcaptchaScriptIfNeeded()
-        .then(() => this.renderHcaptcha())
-        .catch(() => {
-          this.captchaError = 'Captcha failed to load. Please refresh.'
-        })
-  },
-
+    }
+  }
 }
 </script>

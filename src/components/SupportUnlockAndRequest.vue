@@ -41,15 +41,6 @@
           />
         </div>
 
-        <!-- Honeypot (hidden) -->
-        <input
-            v-model="website"
-            type="text"
-            class="hp-field"
-            autocomplete="off"
-            tabindex="-1"
-        />
-
         <div v-if="errorMessage" class="text-danger mb-2">{{ errorMessage }}</div>
 
         <button class="btn btn-custom" type="button" @click="verify">
@@ -68,15 +59,6 @@
               maxlength="1000"
           ></textarea>
         </div>
-
-        <!-- Honeypot (hidden) -->
-        <input
-            v-model="website2"
-            type="text"
-            class="hp-field"
-            autocomplete="off"
-            tabindex="-1"
-        />
 
         <div v-if="errorMessage" class="text-danger mb-2">{{ errorMessage }}</div>
 
@@ -104,13 +86,10 @@ export default {
       // verify step
       email: "",
       qrToken: "",
-      website: "",
-
       supportToken: "",
 
       // send step
       message: "",
-      website2: "",
 
       // ui state
       errorMessage: "",
@@ -131,7 +110,7 @@ export default {
         return;
       }
 
-      SupportService.verifyQr(username, email, qrToken, this.website)
+      SupportService.verifyQr(username, email, qrToken)
           .then((res) => {
             this.supportToken = res?.data?.supportToken || "";
             if (!this.supportToken) this.errorMessage = "Verification failed.";
@@ -167,7 +146,7 @@ export default {
         return;
       }
 
-      SupportService.createSupportRequest(token, msg, this.website2)
+      SupportService.createSupportRequest(token, msg)
           .then(() => {
             // show success state
             this.requestCompleted = true;
@@ -177,8 +156,6 @@ export default {
             this.message = "";
             this.email = "";
             this.qrToken = "";
-            this.website = "";
-            this.website2 = "";
           })
           .catch((err) => {
             const status = err?.response?.status;
@@ -200,14 +177,6 @@ export default {
 </script>
 
 <style scoped>
-/* Honeypot field: hidden from users, visible to bots */
-.hp-field {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
 .card {
   margin-bottom: 60px;
 }

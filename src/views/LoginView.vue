@@ -28,14 +28,7 @@
               :password-error="passwordError"
               @event-password-updated="setPassword"
           />
-          <!-- Honeypot field -->
-          <input
-              v-model="loginWebsite"
-              type="text"
-              class="hp-field"
-              autocomplete="off"
-              tabindex="-1"
-          />
+
           <div class="form-floating">
             <button @click="processLogin"
                     type="button"
@@ -67,14 +60,6 @@ h1 {
   margin-top: 30px; /* to push the h1 lower */
   margin-bottom: 40px; /*to push the next block lower*/
 }
-
-.hp-field {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
 </style>
 
 <script>
@@ -89,7 +74,6 @@ import UsernameService from "@/services/UsernameService";
 import PasswordService from "@/services/PasswordService";
 import SupportUnlockAndRequest from "@/components/SupportUnlockAndRequest.vue";
 
-
 export default {
   name: 'LoginView',
   components: {PasswordInput, UsernameInput, LoginCreateAccountMenu, AlertDanger, SupportUnlockAndRequest},
@@ -97,7 +81,6 @@ export default {
     return {
       username: '',
       password: '',
-      loginWebsite: '', // honeypot
       alertMessage: '',
       usernameError: '',
       passwordError: '',
@@ -142,12 +125,11 @@ export default {
     },
     executeLogin() {
       const trimmedUsername = this.username.trim()
-      LoginService.login(trimmedUsername, this.password,  this.loginWebsite)
+      LoginService.login(trimmedUsername, this.password)
           .then(response => this.handleLoginResponse(response, trimmedUsername))
           .catch(error => this.handleLoginError(error))
     },
     handleLoginResponse(response, trimmedUsername) {
-      this.loginWebsite = ''
       this.resetFailCount()
       this.loginResponse = response.data
       this.setSessionStorageItems(trimmedUsername)
@@ -163,7 +145,6 @@ export default {
       this.$emit('event-user-logged-in')
     },
     handleLoginError(error) {
-      this.loginWebsite = ''
       const status = error?.response?.status
       this.errorResponse = error?.response?.data || {message: 'Unknown error', errorCode: 0}
       if (status === 403 && this.errorResponse.errorCode === 111) {

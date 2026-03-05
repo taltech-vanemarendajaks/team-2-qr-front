@@ -1,20 +1,18 @@
 import axios from "axios";
 
 export default {
-    verifyQr(username, email, qrToken, website = "") {
+    verifyQr(username, email, qrToken) {
         return axios.post("/api/support/verify-qr", {
             username,
             email,
-            qrToken,
-            website
+            qrToken
         });
     },
 
-    createSupportRequest(supportToken, message, website = "") {
+    createSupportRequest(supportToken, message) {
         return axios.post("/api/support/request", {
             supportToken,
-            message,
-            website
+            message
         });
     }
 };
