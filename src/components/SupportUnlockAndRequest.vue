@@ -17,14 +17,9 @@
       <!-- STEP 1: VERIFY -->
       <div v-if="!supportToken">
         <div class="mb-2">
-          <label class="form-label">Username</label>
-          <input :value="username" class="form-control" disabled />
-        </div>
-
-        <div class="mb-2">
           <label class="form-label">Email</label>
           <input
-              v-model="email"
+              v-model="emailInput"
               type="email"
               class="form-control"
               placeholder="your@email.com"
@@ -76,7 +71,7 @@ import SupportService from "@/services/SupportService";
 export default {
   name: "SupportUnlockAndRequest",
   props: {
-    username: {
+    email: {
       type: String,
       required: true,
     },
@@ -84,7 +79,7 @@ export default {
   data() {
     return {
       // verify step
-      email: "",
+      emailInput: this.email || "",
       qrToken: "",
       supportToken: "",
 
@@ -101,16 +96,15 @@ export default {
       this.errorMessage = "";
       this.requestCompleted = false;
 
-      const username = (this.username || "").trim();
-      const email = (this.email || "").trim();
+      const emailInput = (this.emailInput || "").trim();
       const qrToken = (this.qrToken || "").trim();
 
-      if (!username || !email || !qrToken) {
+      if (!this.email || !emailInput || !qrToken) {
         this.errorMessage = "Please fill in email and QR token.";
         return;
       }
 
-      SupportService.verifyQr(username, email, qrToken)
+      SupportService.verifyQr(this.email, emailInput, qrToken)
           .then((res) => {
             this.supportToken = res?.data?.supportToken || "";
             if (!this.supportToken) this.errorMessage = "Verification failed.";
@@ -154,7 +148,7 @@ export default {
             // cleanup (optional)
             this.supportToken = "";
             this.message = "";
-            this.email = "";
+            this.emailInput = "";
             this.qrToken = "";
           })
           .catch((err) => {

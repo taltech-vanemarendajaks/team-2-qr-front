@@ -18,10 +18,10 @@
     <div class="container text-center">
       <div class="row justify-content-center">
         <div class="col-10 col-md-6 col-lg-4">
-          <UsernameInput
-              :username="username"
-              :username-error="usernameError"
-              @event-username-updated="setUsername"/>
+          <EmailInput
+              :email="email"
+              :email-error="emailError"
+              @event-email-updated="setEmail"/>
 
           <PasswordInput
               :password="password"
@@ -39,6 +39,9 @@
               <span v-else>Try again in {{ cooldownRemaining }}s</span>
             </button>
           </div>
+
+          <div class="mt-3 text-muted small">— or —</div>
+          <div id="google-signin-button" class="mt-2 d-flex justify-content-center"></div>
         </div>
       </div>
     </div>
@@ -48,7 +51,7 @@
           Too many failed login attempts ({{ failedLoginCount }}).
           To contact the admin, please verify ownership with your email and a QR token.
         </div>
-        <SupportUnlockAndRequest :username="username.trim()"/>
+        <SupportUnlockAndRequest :email="email.trim()"/>
       </div>
     </div>
 
@@ -68,26 +71,27 @@ import AlertDanger from "@/modal/AlertDanger.vue";
 import NavigationService from "@/services/NavigationService";
 import SessionStorageService from "@/services/SessionStorageService";
 import LoginCreateAccountMenu from "@/components/LoginCreateAccountMenu.vue";
-import UsernameInput from "@/components/inputs/UsernameInput.vue";
+import EmailInput from "@/components/inputs/EmailInput.vue";
 import PasswordInput from "@/components/inputs/PasswordInput.vue";
-import UsernameService from "@/services/UsernameService";
+import EmailService from "@/services/EmailService";
 import PasswordService from "@/services/PasswordService";
 import SupportUnlockAndRequest from "@/components/SupportUnlockAndRequest.vue";
 
 export default {
   name: 'LoginView',
-  components: {PasswordInput, UsernameInput, LoginCreateAccountMenu, AlertDanger, SupportUnlockAndRequest},
+  components: {PasswordInput, EmailInput, LoginCreateAccountMenu, AlertDanger, SupportUnlockAndRequest},
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
       alertMessage: '',
-      usernameError: '',
+      emailError: '',
       passwordError: '',
 
       loginResponse: {
         userId: 0,
-        roleName: ''
+        roleName: '',
+        username: ''
       },
 
       errorResponse: {
@@ -103,8 +107,8 @@ export default {
     }
   },
   methods: {
-    setUsername(username) {
-      this.username = username
+    setEmail(email) {
+      this.email = email
       this.loadFailCount()
       this.loadCooldown()
     },
@@ -113,33 +117,33 @@ export default {
     },
     processLogin() {
       this.resetValidationErrors()
-      this.usernameError = UsernameService.validateLoginUsername(this.username)
+      this.emailError = EmailService.validateSignupEmail(this.email)
       this.passwordError = PasswordService.validateLoginPassword(this.password)
 
-      if (this.usernameError || this.passwordError) return
+      if (this.emailError || this.passwordError) return
       this.executeLogin()
     },
     resetValidationErrors() {
-      this.usernameError = ''
+      this.emailError = ''
       this.passwordError = ''
     },
     executeLogin() {
-      const trimmedUsername = this.username.trim()
-      LoginService.login(trimmedUsername, this.password)
-          .then(response => this.handleLoginResponse(response, trimmedUsername))
+      const trimmedEmail = this.email.trim()
+      LoginService.login(trimmedEmail, this.password)
+          .then(response => this.handleLoginResponse(response, trimmedEmail))
           .catch(error => this.handleLoginError(error))
     },
-    handleLoginResponse(response, trimmedUsername) {
+    handleLoginResponse(response, trimmedEmail) {
       this.resetFailCount()
       this.loginResponse = response.data
-      this.setSessionStorageItems(trimmedUsername)
+      this.setSessionStorageItems(trimmedEmail)
       this.updateNavMenuUserIsLoggedIn()
       NavigationService.navigateToItemsView()
     },
-    setSessionStorageItems(trimmedUsername) {
+    setSessionStorageItems(trimmedEmail) {
       sessionStorage.setItem('userId', this.loginResponse.userId)
       sessionStorage.setItem('roleName', this.loginResponse.roleName)
-      SessionStorageService.setUsername(trimmedUsername)
+      SessionStorageService.setUsername(this.loginResponse.username)
     },
     updateNavMenuUserIsLoggedIn() {
       this.$emit('event-user-logged-in')
@@ -167,7 +171,7 @@ export default {
       this.alertMessage = ''
     },
     getFailKey() {
-      const u = (this.username || '').trim().toLowerCase()
+      const u = (this.email || '').trim().toLowerCase()
       return u ? `loginFailCount:${u}` : 'loginFailCount'
     },
     loadFailCount() {
@@ -197,7 +201,7 @@ export default {
     },
 
     getCooldownKey() {
-      const u = (this.username || '').trim().toLowerCase()
+      const u = (this.email || '').trim().toLowerCase()
       return u ? `loginCooldownUntil:${u}` : 'loginCooldownUntil'
     },
 
@@ -218,6 +222,12 @@ export default {
       }
 
       this.startCooldownTimer(until)
+    },
+
+    handleGoogleCredential(response) {
+      LoginService.googleLogin(response.credential)
+        .then(res => this.handleLoginResponse(res, ''))
+        .catch(err => this.handleLoginError(err))
     },
 
     startCooldownTimer(until) {
@@ -244,6 +254,16 @@ export default {
   mounted() {
     this.loadFailCount()
     this.loadCooldown()
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: '243775297136-iqgo5kt2fk9sftst4g424squijhp4koc.apps.googleusercontent.com',
+        callback: this.handleGoogleCredential,
+      })
+      window.google.accounts.id.renderButton(
+        document.getElementById('google-signin-button'),
+        { theme: 'outline', size: 'large', width: 280 }
+      )
+    }
   },
 
 }
