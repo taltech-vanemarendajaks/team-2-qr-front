@@ -1,10 +1,13 @@
 import axios from "axios";
 
 export default {
-    login(username, password) {
+    login(email, password) {
         return axios.post("/api/auth/login", {
-            username,
+            email,
             password,
         });
+    },
+    googleLogin(idToken) {
+        return axios.post("/api/auth/google", { idToken });
     }
 }
