@@ -10,8 +10,9 @@ export default {
     },
 
     isLoggedIn() {
-        return sessionStorage.getItem('roleName') !== null
+        return !!sessionStorage.getItem('userId')
     },
+
     setUsername(username) {
         sessionStorage.setItem('username', username)
     },

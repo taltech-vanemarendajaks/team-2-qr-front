@@ -5,6 +5,8 @@ import NewAccountView from "@/views/NewAccountView.vue";
 import ItemsView from "@/views/ItemsView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import ItemView from "@/views/ItemView.vue";
+import SessionStorageService from "@/services/SessionStorageService";
+import LoginService from "@/services/LoginService";
 
 const routes = [
     {
@@ -25,12 +27,14 @@ const routes = [
     {
         path: '/items',
         name: 'itemsRoute',
-        component: ItemsView
+        component: ItemsView,
+        meta: { requiresAuth: true }
     },
     {
         path: '/item',
         name: 'itemRoute',
-        component: ItemView
+        component: ItemView,
+        meta: { requiresAuth: true }
     },
     {
         path: '/error',
@@ -44,5 +48,49 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
+router.beforeEach(async (to, from, next) => {
+    if (!to.meta.requiresAuth) {
+        return next();
+    }
+
+    if (SessionStorageService.isLoggedIn()) {
+        return next();
+    }
+
+    try {
+        const response = await LoginService.getCurrentUser();
+        const user = response.data;
+
+        sessionStorage.setItem('userId', user.userId);
+        sessionStorage.setItem('roleName', user.roleName);
+        SessionStorageService.setUsername(user.username);
+
+        next();
+    } catch {
+        sessionStorage.clear();
+        next({ name: 'loginRoute' });
+    }
+});
+
+router.beforeEach(async (to, from, next) => {
+    if (!to.meta.requiresAuth) {
+        return next();
+    }
+
+    try {
+        const response = await LoginService.getCurrentUser();
+        const user = response.data;
+
+        sessionStorage.setItem('userId', user.userId);
+        sessionStorage.setItem('roleName', user.roleName);
+        SessionStorageService.setUsername(user.username);
+
+        next();
+    } catch {
+        sessionStorage.clear();
+        next({ name: 'loginRoute' });
+    }
+});
 
 export default router

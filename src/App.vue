@@ -36,6 +36,7 @@ import {defineComponent} from "vue";
 import LogOutModal from "@/modal/LogOutModal.vue";
 import NavigationService from "@/services/NavigationService";
 import SessionStorageService from "@/services/SessionStorageService";
+import LoginService from "@/services/LoginService";
 
 export default defineComponent({
   name: 'App',
@@ -52,23 +53,45 @@ export default defineComponent({
     startLogOutProcess() {
       this.openLogOutModal()
     },
+
     openLogOutModal() {
       this.logOutModalIsOpen = true
     },
+
     closeLogOutModal() {
       this.logOutModalIsOpen = false
     },
+
     executeLogOut() {
       this.closeLogOutModal()
-      sessionStorage.clear()
-      this.updateNavMenu()
-      NavigationService.navigateToHomeView();
+      LoginService.logout()
+          .finally(() => {
+            sessionStorage.clear()
+            this.updateNavMenu()
+            NavigationService.navigateToHomeView()
+          })
     },
+
+    restoreSession() {
+      LoginService.getCurrentUser()
+          .then(response => {
+            const user = response.data
+            sessionStorage.setItem('userId', user.userId)
+            sessionStorage.setItem('roleName', user.roleName)
+            SessionStorageService.setUsername(user.username)
+            this.updateNavMenu()
+          })
+          .catch(() => {
+            this.restoreSession()
+          })
+    },
+
     updateNavMenu() {
       this.isLoggedIn = SessionStorageService.isLoggedIn()
       this.isAdmin = SessionStorageService.isAdmin()
       this.username = SessionStorageService.getUsername()
     },
+
   },
   beforeMount() {
     this.updateNavMenu()

@@ -112,9 +112,11 @@ export default {
       this.loadFailCount()
       this.loadCooldown()
     },
+
     setPassword(password) {
       this.password = password
     },
+
     processLogin() {
       this.resetValidationErrors()
       this.emailError = EmailService.validateSignupEmail(this.email)
@@ -123,31 +125,37 @@ export default {
       if (this.emailError || this.passwordError) return
       this.executeLogin()
     },
+
     resetValidationErrors() {
       this.emailError = ''
       this.passwordError = ''
     },
+
     executeLogin() {
       const trimmedEmail = this.email.trim()
       LoginService.login(trimmedEmail, this.password)
-          .then(response => this.handleLoginResponse(response, trimmedEmail))
+          .then(response => this.handleLoginResponse(response))
           .catch(error => this.handleLoginError(error))
     },
-    handleLoginResponse(response, trimmedEmail) {
+
+    handleLoginResponse(response) {
       this.resetFailCount()
       this.loginResponse = response.data
-      this.setSessionStorageItems(trimmedEmail)
+      this.cacheLoggedInUser()
       this.updateNavMenuUserIsLoggedIn()
       NavigationService.navigateToItemsView()
     },
-    setSessionStorageItems(trimmedEmail) {
+
+    cacheLoggedInUser() {
       sessionStorage.setItem('userId', this.loginResponse.userId)
       sessionStorage.setItem('roleName', this.loginResponse.roleName)
       SessionStorageService.setUsername(this.loginResponse.username)
     },
+
     updateNavMenuUserIsLoggedIn() {
       this.$emit('event-user-logged-in')
     },
+
     handleLoginError(error) {
       const status = error?.response?.status
       this.errorResponse = error?.response?.data || {message: 'Unknown error', errorCode: 0}
@@ -163,22 +171,27 @@ export default {
       }
       NavigationService.navigateToErrorView()
     },
+
     showAlert(message) {
       this.alertMessage = message
       setTimeout(this.resetAlertMessage, 4000)
     },
+
     resetAlertMessage() {
       this.alertMessage = ''
     },
+
     getFailKey() {
       const u = (this.email || '').trim().toLowerCase()
       return u ? `loginFailCount:${u}` : 'loginFailCount'
     },
+
     loadFailCount() {
       const raw = localStorage.getItem(this.getFailKey())
       this.failedLoginCount = Number(raw || 0)
       this.showSupportVerify = this.failedLoginCount >= 3
     },
+
     incrementFailCount() {
       const next = this.failedLoginCount + 1
       this.failedLoginCount = next
@@ -188,6 +201,7 @@ export default {
         this.startCooldown()
       }
     },
+
     resetFailCount() {
       this.failedLoginCount = 0
       localStorage.removeItem(this.getFailKey())
@@ -226,7 +240,7 @@ export default {
 
     handleGoogleCredential(response) {
       LoginService.googleLogin(response.credential)
-        .then(res => this.handleLoginResponse(res, ''))
+        .then(res => this.handleLoginResponse(res))
         .catch(err => this.handleLoginError(err))
     },
 
