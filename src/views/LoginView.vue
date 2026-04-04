@@ -40,8 +40,11 @@
             </button>
           </div>
 
-          <div class="mt-3 text-muted small">— or —</div>
-          <div id="google-signin-button" class="mt-2 d-flex justify-content-center"></div>
+          <GoogleSignInButton
+              @success="handleGoogleLoginResponse"
+              @error="handleGoogleLoginError"
+          />
+
         </div>
       </div>
     </div>
@@ -76,10 +79,18 @@ import PasswordInput from "@/components/inputs/PasswordInput.vue";
 import EmailService from "@/services/EmailService";
 import PasswordService from "@/services/PasswordService";
 import SupportUnlockAndRequest from "@/components/SupportUnlockAndRequest.vue";
+import GoogleSignInButton from "@/components/GoogleSignInButton.vue";
 
 export default {
   name: 'LoginView',
-  components: {PasswordInput, EmailInput, LoginCreateAccountMenu, AlertDanger, SupportUnlockAndRequest},
+  components: {
+    PasswordInput,
+    EmailInput,
+    LoginCreateAccountMenu,
+    AlertDanger,
+    SupportUnlockAndRequest,
+    GoogleSignInButton
+  },
   data() {
     return {
       email: '',
@@ -141,15 +152,9 @@ export default {
     handleLoginResponse(response) {
       this.resetFailCount()
       this.loginResponse = response.data
-      this.cacheLoggedInUser()
+      SessionStorageService.setLoggedInUser(this.loginResponse)
       this.updateNavMenuUserIsLoggedIn()
       NavigationService.navigateToItemsView()
-    },
-
-    cacheLoggedInUser() {
-      sessionStorage.setItem('userId', this.loginResponse.userId)
-      sessionStorage.setItem('roleName', this.loginResponse.roleName)
-      SessionStorageService.setUsername(this.loginResponse.username)
     },
 
     updateNavMenuUserIsLoggedIn() {
@@ -238,10 +243,12 @@ export default {
       this.startCooldownTimer(until)
     },
 
-    handleGoogleCredential(response) {
-      LoginService.googleLogin(response.credential)
-        .then(res => this.handleLoginResponse(res))
-        .catch(err => this.handleLoginError(err))
+    handleGoogleLoginResponse(response) {
+      this.handleLoginResponse(response)
+    },
+
+    handleGoogleLoginError(error) {
+      this.handleLoginError(error)
     },
 
     startCooldownTimer(until) {
@@ -262,23 +269,12 @@ export default {
 
         this.cooldownRemaining = remaining
       }, 1000)
-    },
-
-  },
-  mounted() {
-    this.loadFailCount()
-    this.loadCooldown()
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: '243775297136-iqgo5kt2fk9sftst4g424squijhp4koc.apps.googleusercontent.com',
-        callback: this.handleGoogleCredential,
-      })
-      window.google.accounts.id.renderButton(
-        document.getElementById('google-signin-button'),
-        { theme: 'outline', size: 'large', width: 280 }
-      )
     }
   },
 
+  mounted() {
+    this.loadFailCount()
+    this.loadCooldown()
+  },
 }
 </script>
