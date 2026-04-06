@@ -2,7 +2,7 @@ export default {
     validateLoginPassword(password) {
         const p = password || ''
         if (p.length === 0) return 'Password is required'
-        if (p.length > 255) return 'Password must be at most 50 characters'
+        if (p.length > 50) return 'Password must be at most 50 characters'
         return ''
     },
 

@@ -1,11 +1,4 @@
 export default {
-    validateLoginUsername(username) {
-        const u = (username || '').trim()
-        if (u.length === 0) return 'Username is required'
-        if (u.length > 50) return 'Username must be at most 50 characters'
-        return ''
-    },
-
     validateSignupUsername(username) {
         const u = (username || '').trim()
         if (u.length === 0) return 'Username is required'

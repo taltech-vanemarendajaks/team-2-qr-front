@@ -33,10 +33,8 @@
             <button @click="processLogin"
                     type="button"
                     class="btn btn-custom btn-large"
-                    :disabled="cooldownRemaining > 0"
             >
-              <span v-if="cooldownRemaining === 0">Go!</span>
-              <span v-else>Try again in {{ cooldownRemaining }}s</span>
+              Go!
             </button>
           </div>
 
@@ -45,19 +43,13 @@
               @error="handleGoogleLoginError"
           />
 
-        </div>
-      </div>
-    </div>
-    <div v-if="showSupportVerify" class="row justify-content-center mt-4 mb-5">
-      <div class="col-10 col-md-8 col-lg-6 text-start">
-        <div class="alert alert-info">
-          Too many failed login attempts ({{ failedLoginCount }}).
-          To contact the admin, please verify ownership with your email and a QR token.
-        </div>
-        <SupportUnlockAndRequest :email="email.trim()"/>
-      </div>
-    </div>
+          <div v-if="failedLoginCount >= 3" class="alert alert-info mt-3">
+            Having trouble logging in? Password reset via email will be available soon.
+          </div>
 
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -78,7 +70,6 @@ import EmailInput from "@/components/inputs/EmailInput.vue";
 import PasswordInput from "@/components/inputs/PasswordInput.vue";
 import EmailService from "@/services/EmailService";
 import PasswordService from "@/services/PasswordService";
-import SupportUnlockAndRequest from "@/components/SupportUnlockAndRequest.vue";
 import GoogleSignInButton from "@/components/GoogleSignInButton.vue";
 
 export default {
@@ -88,7 +79,6 @@ export default {
     EmailInput,
     LoginCreateAccountMenu,
     AlertDanger,
-    SupportUnlockAndRequest,
     GoogleSignInButton
   },
   data() {
@@ -111,17 +101,12 @@ export default {
       },
 
       failedLoginCount: 0,
-      showSupportVerify: false,
-      cooldownSeconds: 30,
-      cooldownRemaining: 0,
-      cooldownTimer: null,
     }
   },
   methods: {
     setEmail(email) {
       this.email = email
       this.loadFailCount()
-      this.loadCooldown()
     },
 
     setPassword(password) {
@@ -163,11 +148,11 @@ export default {
 
     handleLoginError(error) {
       const status = error?.response?.status
-      this.errorResponse = error?.response?.data || {message: 'Unknown error', errorCode: 0}
+      this.errorResponse = error?.response?.data || { message: 'Unknown error', errorCode: 0 }
       if (status === 403 && this.errorResponse.errorCode === 111) {
         this.password = ''
         this.incrementFailCount()
-        this.showAlert(this.errorResponse.message)
+        this.showAlert('Incorrect email or password.')
         return
       }
       if (status === 400) {
@@ -179,7 +164,7 @@ export default {
 
     showAlert(message) {
       this.alertMessage = message
-      setTimeout(this.resetAlertMessage, 4000)
+      setTimeout(this.resetAlertMessage, 10000)
     },
 
     resetAlertMessage() {
@@ -187,60 +172,24 @@ export default {
     },
 
     getFailKey() {
-      const u = (this.email || '').trim().toLowerCase()
-      return u ? `loginFailCount:${u}` : 'loginFailCount'
+      const e = (this.email || '').trim().toLowerCase()
+      return e ? `loginFailCount:${e}` : 'loginFailCount'
     },
 
     loadFailCount() {
       const raw = localStorage.getItem(this.getFailKey())
       this.failedLoginCount = Number(raw || 0)
-      this.showSupportVerify = this.failedLoginCount >= 3
     },
 
     incrementFailCount() {
       const next = this.failedLoginCount + 1
       this.failedLoginCount = next
       localStorage.setItem(this.getFailKey(), String(next))
-      this.showSupportVerify = next >= 3
-      if (next === 3) {
-        this.startCooldown()
-      }
     },
 
     resetFailCount() {
       this.failedLoginCount = 0
       localStorage.removeItem(this.getFailKey())
-      this.showSupportVerify = false
-      this.cooldownRemaining = 0
-      if (this.cooldownTimer) {
-        clearInterval(this.cooldownTimer)
-        this.cooldownTimer = null
-      }
-      localStorage.removeItem(this.getCooldownKey())
-    },
-
-    getCooldownKey() {
-      const u = (this.email || '').trim().toLowerCase()
-      return u ? `loginCooldownUntil:${u}` : 'loginCooldownUntil'
-    },
-
-    startCooldown() {
-      const until = Date.now() + this.cooldownSeconds * 1000
-      localStorage.setItem(this.getCooldownKey(), String(until))
-      this.startCooldownTimer(until)
-    },
-
-    loadCooldown() {
-      const untilRaw = localStorage.getItem(this.getCooldownKey())
-      if (!untilRaw) return
-
-      const until = Number(untilRaw)
-      if (Date.now() >= until) {
-        localStorage.removeItem(this.getCooldownKey())
-        return
-      }
-
-      this.startCooldownTimer(until)
     },
 
     handleGoogleLoginResponse(response) {
@@ -250,31 +199,9 @@ export default {
     handleGoogleLoginError(error) {
       this.handleLoginError(error)
     },
-
-    startCooldownTimer(until) {
-      if (this.cooldownTimer) clearInterval(this.cooldownTimer)
-
-      this.cooldownRemaining = Math.ceil((until - Date.now()) / 1000)
-
-      this.cooldownTimer = setInterval(() => {
-        const remaining = Math.ceil((until - Date.now()) / 1000)
-
-        if (remaining <= 0) {
-          clearInterval(this.cooldownTimer)
-          this.cooldownTimer = null
-          this.cooldownRemaining = 0
-          localStorage.removeItem(this.getCooldownKey())
-          return
-        }
-
-        this.cooldownRemaining = remaining
-      }, 1000)
-    }
   },
-
   mounted() {
     this.loadFailCount()
-    this.loadCooldown()
   },
 }
 </script>
