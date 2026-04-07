@@ -7,6 +7,7 @@ import ErrorView from "@/views/ErrorView.vue";
 import ItemView from "@/views/ItemView.vue";
 import SessionStorageService from "@/services/SessionStorageService";
 import LoginService from "@/services/LoginService";
+import NotAuthorizedView from "@/views/NotAuthorizedView.vue";
 
 const routes = [
     {
@@ -41,7 +42,11 @@ const routes = [
         name: 'errorRoute',
         component: ErrorView
     },
-
+    {
+        path: '/not-authorized',
+        name: 'notAuthorizedRoute',
+        component: NotAuthorizedView
+    },
 ]
 
 const router = createRouter({
@@ -54,42 +59,24 @@ router.beforeEach(async (to, from, next) => {
         return next();
     }
 
-    if (SessionStorageService.isLoggedIn()) {
-        return next();
-    }
-
     try {
-        const response = await LoginService.getCurrentUser();
-        const user = response.data;
+        const needsFreshUserCheck =
+            !SessionStorageService.isLoggedIn() || to.meta.requiresAdmin;
 
-        sessionStorage.setItem('userId', user.userId);
-        sessionStorage.setItem('roleName', user.roleName);
-        SessionStorageService.setUsername(user.username);
+        if (needsFreshUserCheck) {
+            const response = await LoginService.getCurrentUser();
+            const user = response.data;
+            SessionStorageService.setLoggedInUser(user);
+        }
 
-        next();
-    } catch {
-        sessionStorage.clear();
-        next({ name: 'loginRoute' });
-    }
-});
+        if (to.meta.requiresAdmin && !SessionStorageService.isAdmin()) {
+            return next({ name: 'notAuthorizedRoute' });
+        }
 
-router.beforeEach(async (to, from, next) => {
-    if (!to.meta.requiresAuth) {
         return next();
-    }
-
-    try {
-        const response = await LoginService.getCurrentUser();
-        const user = response.data;
-
-        sessionStorage.setItem('userId', user.userId);
-        sessionStorage.setItem('roleName', user.roleName);
-        SessionStorageService.setUsername(user.username);
-
-        next();
     } catch {
-        sessionStorage.clear();
-        next({ name: 'loginRoute' });
+        SessionStorageService.clearUserSession();
+        return next({ name: 'loginRoute' });
     }
 });
 

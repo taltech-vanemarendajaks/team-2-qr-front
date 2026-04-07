@@ -1,22 +1,26 @@
 import router from "@/router";
 import SessionStorageService from "@/services/SessionStorageService";
 
+function safePush(route) {
+    router.push(route).catch(() => {});
+}
+
 export default {
     navigateToLoginView() {
-        router.push({name: 'loginRoute'})
+        safePush({name: 'loginRoute'})
     },
     navigateToItemsView() {
-        router.push({name: 'itemsRoute'})
+        safePush({name: 'itemsRoute'})
     },
     navigateToErrorView() {
-        router.push({name: 'errorRoute'})
+        safePush({name: 'errorRoute'})
     },
     navigateToHomeView() {
-        router.push({name: 'homeRoute'})
+        safePush({name: 'homeRoute'})
     },
     navigateToEditItem(itemId) {
         SessionStorageService.setItemMode('edit');
-        router.push({
+        safePush({
             name: 'itemRoute',
             query: {itemId: itemId}
         });
@@ -24,12 +28,12 @@ export default {
     },
     navigateToAddItem() {
         SessionStorageService.clearItemMode();
-        router.push({name: 'itemRoute'});
+        safePush({name: 'itemRoute'});
     },
 
     navigateToItemView(itemId) {
         SessionStorageService.clearItemMode();
-        router.push({
+        safePush({
             name: 'itemRoute',
             query: {
                 itemId: itemId
@@ -38,7 +42,7 @@ export default {
     },
     navigateToDeleteItemModal(itemId) {
         SessionStorageService.setItemMode('delete');
-        router.push({
+        safePush({
             name: 'itemRoute',
             query: {itemId}
         });
