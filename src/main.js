@@ -13,11 +13,11 @@ import "bootstrap/dist/js/bootstrap.js"
 // Font Awesome imports
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-import {faArrowRightFromBracket, faUserSecret, faPenToSquare, faTrash, faQrcode} from '@fortawesome/free-solid-svg-icons'
+import {faArrowRightFromBracket, faUserSecret, faPenToSquare, faTrash, faQrcode, faSort} from '@fortawesome/free-solid-svg-icons'
 import {faEye, faEyeSlash, far} from '@fortawesome/free-regular-svg-icons'
 
 // Add the imported icons to the library
-library.add(faArrowRightFromBracket, faUserSecret, far,faPenToSquare, faTrash, faQrcode, faEye, faEyeSlash)
+library.add(faArrowRightFromBracket, faUserSecret, far,faPenToSquare, faTrash, faQrcode, faEye, faEyeSlash, faSort)
 
 const app = createApp(App)
 
