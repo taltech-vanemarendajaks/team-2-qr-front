@@ -2,21 +2,50 @@
   <button class="btn btn-custom mb-3" @click="navigateToAddItem">
     Add New Item +
   </button>
+
   <div>
-    <div></div>
+    <div class="d-flex justify-content-center mb-4">
+      <div class="w-100" style="max-width: 500px;">
+        <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control"
+            placeholder="Search by item name"
+        />
+      </div>
+    </div>
+
     <div class="items-table-wrapper">
-      <table class="items-table" v-if="items.length >0">
+      <table class="items-table" v-if="filteredAndSortedItems.length >0">
         <thead>
         <tr>
-          <th scope="col">Item</th>
-          <th scope="col">Date</th>
+          <th scope="col">
+            <span class="d-inline-flex align-items-center">
+            Item
+           <font-awesome-icon
+               icon="sort"
+               class="ms-2 table-icon"
+               @click="changeSort('itemName')"
+           />
+            </span>
+          </th>
+          <th scope="col">
+            <span class="d-inline-flex align-items-center">
+            Date of Purchase
+              <font-awesome-icon
+                  icon="sort"
+                  class="ms-2 table-icon"
+                  @click="changeSort('itemDate')"
+              />
+            </span>
+          </th>
           <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="item in items" :key="item.itemId">
+        <tr v-for="item in filteredAndSortedItems" :key="item.itemId">
           <td>
-            <a href="#" @click="navigateToItemView(item.itemId)">{{ item.itemName }}</a>
+            <a href="#" @click.prevent="navigateToItemView(item.itemId)">{{ item.itemName }}</a>
           </td>
           <td>{{ formatDate(item.itemDate) }}</td>
           <td>
@@ -27,10 +56,13 @@
         </tr>
         </tbody>
       </table>
+
       <div v-else>
-        You have no items yet :)
+        <span v-if="items.length === 0">You have no items yet :) </span>
+        <span v-else>No items match your search.</span>
       </div>
     </div>
+
     <QrCodeModal
         :qr-code-modal-is-open="qrCodeModalIsOpen"
         :qr-code="qrCode"
@@ -51,18 +83,43 @@ export default {
   components: {QrCodeModal},
   data() {
     return {
-      items: [
-        {
-          itemId: 0,
-          itemName: '',
-          itemDate: ''
-        }
-      ],
+      items: [],
+      searchQuery: '',
+      sortField: 'itemDate',
+      sortDirection: 'desc',
       isLoggedIn: false,
       qrCodeModalIsOpen: false,
       qrCode: '',
     }
   },
+
+  computed: {
+    filteredAndSortedItems() {
+      let result = [...this.items];
+
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase();
+        result = result.filter(item =>
+            item.itemName.toLowerCase().includes(query)
+        );
+      }
+
+      result.sort((a, b) => {
+        let comparison = 0;
+
+        if (this.sortField === 'itemName') {
+          comparison = a.itemName.localeCompare(b.itemName);
+        } else if (this.sortField === 'itemDate') {
+          comparison = new Date(a.itemDate) - new Date(b.itemDate);
+        }
+
+        return this.sortDirection === 'asc' ? comparison : -comparison;
+      });
+
+      return result;
+    }
+  },
+
   methods: {
     navigateToAddItem() {
       NavigationService.navigateToAddItem()
@@ -79,6 +136,7 @@ export default {
     navigateToQrCodeModal(itemId) {
       this.openQrCodeForItem(itemId);
     },
+
     openQrCodeForItem(itemId) {
       QrCodeService.sendGetQrCodeRequest(itemId)
           .then(response => {
@@ -100,8 +158,18 @@ export default {
             this.items = response.data
           });
     },
+
     formatDate(dateString) {
       return new Date(dateString).toLocaleDateString('et-EE');
+    },
+
+    changeSort(field) {
+      if (this.sortField === field) {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        this.sortField = field;
+        this.sortDirection = field === 'itemDate' ? 'desc' : 'asc';
+      }
     }
   },
   beforeMount() {
