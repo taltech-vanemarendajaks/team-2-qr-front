@@ -1,31 +1,55 @@
 <template>
-  <div class="container text-center">
-    <div>
-      <h1>MyStuffLabelled</h1>
+  <section class="home-view">
+    <div class="home-view__topbar">
+      <LoginCreateAccountMenu />
     </div>
-    <div class="container text-center">
-      <div class="row">
-        <div>
-          <LoginCreateAccountMenu/>
-          <img src="../assets/images/background_picture.webp" alt="background" class="home-image">
+
+    <div class="home-view__inner">
+      <div class="home-view__content">
+        <div class="home-view__heading-group">
+          <h1 class="home-view__welcome">Welcome to</h1>
+          <img
+              class="home-view__logo"
+              src="@/assets/images/logo.webp"
+              alt="Tagly logo"
+          >
         </div>
+
+        <p class="home-view__description">
+          Keep track of your belongings — all details in one place
+        </p>
+
+        <ul class="home-view__feature-list" aria-label="Tagly features">
+          <li class="home-view__feature-item">
+            <font-awesome-icon icon="fa-solid fa-check" class="home-view__feature-icon" />
+            <span class="home-view__feature-text">Save receipts</span>
+          </li>
+
+          <li class="home-view__feature-item">
+            <font-awesome-icon icon="fa-solid fa-check" class="home-view__feature-icon" />
+            <span class="home-view__feature-text">Track warranty</span>
+          </li>
+
+          <li class="home-view__feature-item">
+            <font-awesome-icon icon="fa-solid fa-check" class="home-view__feature-icon" />
+            <span class="home-view__feature-text">Access by QR code</span>
+          </li>
+        </ul>
       </div>
-    </div>
-  </div>
-</template>
 
-<style scoped>
-h1 {
-  margin-top: 60px; /* to push the h1 lower */
-  margin-bottom: 40px; /*to push the next block lower*/
-}
-</style>
+      <!--  <FeatureShowcasePanel class="home-view__showcase" /> -->
+     </div>
+   </section>
+ </template>
 
-<script>
-import LoginCreateAccountMenu from "@/components/LoginCreateAccountMenu.vue";
+ <style scoped src="@/assets/css/views/home-view.css"></style>
 
-export default {
-  name: 'HomeView',
-  components: {LoginCreateAccountMenu}
-}
-</script>
+ <script>
+ import LoginCreateAccountMenu from "@/components/LoginCreateAccountMenu.vue";
+ //import FeatureShowcasePanel from "@/components/FeatureShowcasePanel.vue";
+
+ export default {
+   name: 'HomeView',
+   components: {LoginCreateAccountMenu}
+ }
+ </script>

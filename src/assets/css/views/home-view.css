@@ -1,0 +1,131 @@
+.home-view {
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+.home-view__topbar {
+    width: min(100%, 1200px);
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 1.25rem 0;
+}
+
+.home-view__inner {
+    width: min(100%, 1200px);
+    margin: 0 auto;
+    display: grid;
+    gap: 2.25rem;
+    padding: 1.5rem 1.25rem 3rem;
+    align-items: start;
+}
+
+.home-view__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.home-view__heading-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.home-view__welcome {
+    font-size: clamp(1.7rem, 6vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text);
+}
+
+.home-view__logo {
+    width: clamp(9.5rem, 38vw, 14.5rem);
+    max-width: 100%;
+    height: auto;
+}
+
+.home-view__description {
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.home-view__feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+    width: 100%;
+    max-width: 18rem;
+}
+
+.home-view__feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+}
+
+.home-view__feature-icon {
+    font-size: 0.95rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.home-view__feature-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+@media (min-width: 860px) {
+    .home-view__topbar {
+        justify-content: flex-end;
+        padding: 1.25rem 2rem 0;
+    }
+
+    .home-view__inner {
+        padding: 1.5rem 2rem 4rem;
+    }
+
+    .home-view__content {
+        align-items: flex-start;
+        text-align: left;
+        margin: 0;
+        gap: 1.6rem;
+    }
+
+    .home-view__heading-group {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .home-view__welcome {
+        font-size: clamp(2.6rem, 4.8vw, 4rem);
+        white-space: nowrap;
+    }
+
+    .home-view__logo {
+        width: clamp(14rem, 22vw, 20rem);
+        transform: translateY(1.5rem);
+    }
+
+    .home-view__description {
+        max-width: 34rem;
+        font-size: 1.08rem;
+    }
+
+    .home-view__feature-list {
+        max-width: none;
+    }
+}

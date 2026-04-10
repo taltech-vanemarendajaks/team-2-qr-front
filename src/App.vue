@@ -18,19 +18,6 @@
   <router-view @event-user-logged-in="updateNavMenu"/>
 </template>
 
-<style>
-html, body {
-  margin: 0;
-  height: 100%;
-  background-color: #050811;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Comic+Relief&display=swap');
-nav a {
-  font-weight: bold;
-  color: #fc9d0d;
-}
-</style>
 <script>
 import {defineComponent} from "vue";
 import LogOutModal from "@/modal/LogOutModal.vue";
@@ -82,7 +69,8 @@ export default defineComponent({
             this.updateNavMenu()
           })
           .catch(() => {
-            this.restoreSession()
+            sessionStorage.clear()
+            this.updateNavMenu()
           })
     },
 
@@ -94,7 +82,7 @@ export default defineComponent({
 
   },
   beforeMount() {
-    this.updateNavMenu()
+    this.restoreSession()
   }
 })
 </script>
