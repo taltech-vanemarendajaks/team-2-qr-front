@@ -36,5 +36,12 @@ export default {
 
     clearItemMode() {
         sessionStorage.removeItem(ITEM_MODE_KEY);
+    },
+
+    clearUserSession() {
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('roleName');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem(ITEM_MODE_KEY);
     }
 }
