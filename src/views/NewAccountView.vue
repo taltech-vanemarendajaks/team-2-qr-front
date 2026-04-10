@@ -24,6 +24,10 @@
         <div class="form-floating">
           <button @click="addNewUser" type="button" class="btn btn-custom btn-large">Sign up!</button>
         </div>
+        <GoogleSignInButton
+            @success="handleGoogleLoginResponse"
+            @error="handleGoogleLoginError"
+        />
       </div>
     </div>
   </div>
@@ -46,10 +50,12 @@ import EmailInput from "@/components/inputs/EmailInput.vue";
 import UsernameService from "@/services/UsernameService";
 import PasswordService from "@/services/PasswordService";
 import EmailService from "@/services/EmailService";
+import GoogleSignInButton from "@/components/GoogleSignInButton.vue";
+import SessionStorageService from "@/services/SessionStorageService";
 
 export default {
   name: 'NewAccountView',
-  components: {EmailInput, PasswordInput, UsernameInput, LoginCreateAccountMenu, AlertSuccess},
+  components: {EmailInput, PasswordInput, UsernameInput, LoginCreateAccountMenu, AlertSuccess, GoogleSignInButton},
   data() {
     return {
       alertSuccessMessage: '',
@@ -68,7 +74,13 @@ export default {
       errorResponse: {
         message: '',
         errorCode: 0
-      }
+      },
+
+      loginResponse: {
+        userId: 0,
+        roleName: '',
+        username: ''
+      },
     }
   },
   methods: {
@@ -132,6 +144,32 @@ export default {
       }
       NavigationService.navigateToErrorView()
     },
+
+    handleGoogleLoginResponse(response) {
+      this.resetValidationErrors()
+      this.loginResponse = response.data
+      SessionStorageService.setLoggedInUser(this.loginResponse)
+      this.updateNavMenuUserIsLoggedIn()
+      NavigationService.navigateToItemsView()
+    },
+
+    updateNavMenuUserIsLoggedIn() {
+      this.$emit('event-user-logged-in')
+    },
+
+    handleGoogleLoginError(error) {
+      this.resetValidationErrors()
+      const status = error?.response?.status
+      this.errorResponse = error?.response?.data || { message: 'Unknown error', errorCode: 0 }
+
+      if (status === 403 || status === 400) {
+        this.emailError = this.errorResponse.message || 'Google sign-in failed'
+        return
+      }
+
+      NavigationService.navigateToErrorView()
+    },
+
     resetValidationErrors() {
       this.usernameError = ''
       this.passwordError = ''
@@ -146,6 +184,6 @@ export default {
     setUserEmail(email) {
       this.user.email = email
     }
-  }
+  },
 }
 </script>
