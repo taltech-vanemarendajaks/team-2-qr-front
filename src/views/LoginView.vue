@@ -43,10 +43,6 @@
               @error="handleGoogleLoginError"
           />
 
-          <div v-if="failedLoginCount >= 3" class="alert alert-info mt-3">
-            Having trouble logging in? Password reset via email will be available soon.
-          </div>
-
         </div>
       </div>
     </div>
@@ -99,14 +95,11 @@ export default {
         message: '',
         errorCode: 0
       },
-
-      failedLoginCount: 0,
     }
   },
   methods: {
     setEmail(email) {
       this.email = email
-      this.loadFailCount()
     },
 
     setPassword(password) {
@@ -135,7 +128,6 @@ export default {
     },
 
     handleLoginResponse(response) {
-      this.resetFailCount()
       this.loginResponse = response.data
       SessionStorageService.setLoggedInUser(this.loginResponse)
       this.updateNavMenuUserIsLoggedIn()
@@ -151,8 +143,14 @@ export default {
       this.errorResponse = error?.response?.data || { message: 'Unknown error', errorCode: 0 }
       if (status === 403 && this.errorResponse.errorCode === 111) {
         this.password = ''
-        this.incrementFailCount()
         this.showAlert('Incorrect email or password.')
+        return
+      }
+      if (status === 429) {
+        this.password = ''
+        this.showAlert(
+            'Too many attempts. Please try again in a moment. If you’re having trouble remembering your password, password reset via email will be available soon.'
+        )
         return
       }
       if (status === 400) {
@@ -164,32 +162,10 @@ export default {
 
     showAlert(message) {
       this.alertMessage = message
-      setTimeout(this.resetAlertMessage, 10000)
     },
 
     resetAlertMessage() {
       this.alertMessage = ''
-    },
-
-    getFailKey() {
-      const e = (this.email || '').trim().toLowerCase()
-      return e ? `loginFailCount:${e}` : 'loginFailCount'
-    },
-
-    loadFailCount() {
-      const raw = localStorage.getItem(this.getFailKey())
-      this.failedLoginCount = Number(raw || 0)
-    },
-
-    incrementFailCount() {
-      const next = this.failedLoginCount + 1
-      this.failedLoginCount = next
-      localStorage.setItem(this.getFailKey(), String(next))
-    },
-
-    resetFailCount() {
-      this.failedLoginCount = 0
-      localStorage.removeItem(this.getFailKey())
     },
 
     handleGoogleLoginResponse(response) {
@@ -199,9 +175,6 @@ export default {
     handleGoogleLoginError(error) {
       this.handleLoginError(error)
     },
-  },
-  mounted() {
-    this.loadFailCount()
   },
 }
 </script>
