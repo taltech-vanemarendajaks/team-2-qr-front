@@ -15,8 +15,8 @@
     width: min(100%, 1200px);
     margin: 0 auto;
     display: grid;
-    gap: 2.25rem;
-    padding: 1.5rem 1.25rem 3rem;
+    gap: 2rem;
+    padding: 1.25rem 1.25rem 3rem;
     align-items: start;
 }
 
@@ -26,7 +26,7 @@
     align-items: center;
     text-align: center;
     gap: 1.5rem;
-    max-width: 42rem;
+    max-width: 36rem;
     margin: 0 auto;
 }
 
@@ -34,11 +34,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.35rem;
 }
 
 .home-view__welcome {
-    font-size: clamp(1.7rem, 6vw, 2.4rem);
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.03em;
@@ -63,7 +63,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 0.9rem;
+    gap: 0.95rem;
     width: 100%;
     max-width: 18rem;
 }
@@ -87,6 +87,10 @@
     color: var(--text);
 }
 
+.home-view__showcase {
+    width: 100%;
+}
+
 @media (min-width: 860px) {
     .home-view__topbar {
         justify-content: flex-end;
@@ -94,6 +98,8 @@
     }
 
     .home-view__inner {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 2.5rem;
         padding: 1.5rem 2rem 4rem;
     }
 
@@ -101,17 +107,17 @@
         align-items: flex-start;
         text-align: left;
         margin: 0;
-        gap: 1.6rem;
+        max-width: 34rem;
     }
 
     .home-view__heading-group {
         flex-direction: row;
         align-items: center;
-        gap: 1rem;
+        gap: 0.9rem;
     }
 
     .home-view__welcome {
-        font-size: clamp(2.6rem, 4.8vw, 4rem);
+        font-size: clamp(2.8rem, 5vw, 4rem);
         white-space: nowrap;
     }
 
@@ -121,11 +127,15 @@
     }
 
     .home-view__description {
-        max-width: 34rem;
+        max-width: 30rem;
         font-size: 1.08rem;
     }
 
     .home-view__feature-list {
-        max-width: none;
+        max-width: 20rem;
+    }
+
+    .home-view__showcase {
+        justify-self: stretch;
     }
 }

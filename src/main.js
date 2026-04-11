@@ -6,7 +6,7 @@ import axios from "axios";
 
 //import "@/assets/css/style.css"
 import "@/assets/css/base.css"
-import "@/assets/css/components.css"
+import "@/assets/css/components/feature-panel.css"
 import "@/assets/css/views/home-view.css"
 
 // bootstrap

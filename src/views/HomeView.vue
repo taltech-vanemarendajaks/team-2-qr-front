@@ -37,7 +37,7 @@
         </ul>
       </div>
 
-      <!--  <FeatureShowcasePanel class="home-view__showcase" /> -->
+      <FeatureShowcasePanel class="home-view__showcase" />
      </div>
    </section>
  </template>
@@ -46,10 +46,10 @@
 
  <script>
  import LoginCreateAccountMenu from "@/components/LoginCreateAccountMenu.vue";
- //import FeatureShowcasePanel from "@/components/FeatureShowcasePanel.vue";
+ import FeatureShowcasePanel from "@/components/FeatureShowcasePanel.vue";
 
  export default {
    name: 'HomeView',
-   components: {LoginCreateAccountMenu}
+   components: {LoginCreateAccountMenu, FeatureShowcasePanel}
  }
  </script>
