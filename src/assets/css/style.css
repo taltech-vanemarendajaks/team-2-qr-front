@@ -1,56 +1,4 @@
-html, body {
-    height: 100%;
-    margin: 0;
-}
 
-#app {
-    min-height: 100vh;
-    background-color: #050811;
-}
-
-body {
-    color: #fc9d0d;
-}
-
-h1 {
-    color: #fc9d0d;
-}
-
-#app {
-    min-height: 100vh;
-    font-family: "Comic Relief", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #fc9d0d;
-}
-
-
-a {
-    display: inline-block; /* allows scaling */
-    transition: transform 0.2s ease; /* smooth animation */
-}
-
-a:hover {
-    transform: scale(1.1); /* pop effect */
-    color: #869770; /* change color */
-}
-
-.home-links {
-    display: flex; /*Makes the children ("LogIn" & "Create account") sit next to each other horizontally by default.*/
-    justify-content: center;
-    gap: 40px; /*gap between links*/
-    margin-bottom: 40px; /*to push the next block lower*/
-}
-.home-image {
-    display: block;
-    margin: 40px auto 0 auto; /* top margin + centered */
-    max-width: 400px; /* prevents the picture from getting too big */
-    height: auto; /* keeps proportions */
-}
-input.form-control {
-    background-color: #a2c4c9 !important;
-}
 
 /* Custom button style */
 .btn-custom {
@@ -139,20 +87,6 @@ input.form-control {
     display: flex;
     justify-content: center;
     gap: 20px; /* <-- space between buttons */
-}
-
-.password-toggle-icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%); /*for the icon to be perfectly centered*/
-    cursor: pointer;
-    color: #888;
-    font-size: 1.2rem;
-}
-
-.password-toggle-icon:hover {
-    color: #000;
 }
 
 .items-table-wrapper {

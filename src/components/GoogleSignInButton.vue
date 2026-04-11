@@ -1,6 +1,8 @@
 <template>
-  <div class="mt-3 text-muted small">— or —</div>
-  <div ref="googleButtonRef" class="mt-2 d-flex justify-content-center"></div>
+  <div class="google-signin">
+    <div class="google-signin__divider">— or —</div>
+    <div ref="googleButtonRef" class="google-signin__button"></div>
+  </div>
 </template>
 
 <script>
@@ -31,7 +33,11 @@ export default {
 
       window.google.accounts.id.renderButton(
           this.$refs.googleButtonRef,
-          { theme: 'outline', size: 'large', width: 280 }
+          {
+            theme: 'outline',
+            size: 'large',
+            width: 280
+          }
       );
     }
   },

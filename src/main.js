@@ -4,10 +4,14 @@ import router from './router'
 import VueAxios from "vue-axios";
 import axios from "axios";
 
-//import "@/assets/css/style.css"
+import "@/assets/css/style.css"
 import "@/assets/css/base.css"
 import "@/assets/css/components/feature-panel.css"
 import "@/assets/css/views/home-view.css"
+import "@/assets/css/views/auth-view.css"
+import "@/assets/css/components/auth-menu.css";
+import "@/assets/css/components/auth-input.css";
+import "@/assets/css/components/google-signin.css";
 
 // bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"
