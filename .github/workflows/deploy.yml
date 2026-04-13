@@ -17,5 +17,5 @@ jobs:
           script: |
             cd /home/ubuntu/team-2-qr-front
             git pull origin master
-            npm install
-            pm2 restart frontend || pm2 start "npm run serve" --name frontend
+            /usr/bin/npm install
+            /usr/bin/pm2 restart frontend || /usr/bin/pm2 start "npm run serve" --name frontend
