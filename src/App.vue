@@ -1,21 +1,41 @@
 <template>
+  <div v-if="isLoggedIn" class="app-header">
+    <div class="app-header-row">
 
-  <div v-if="isLoggedIn" class="header-bar">
-    <div class="welcome-text">
-      Welcome, {{ this.username }}!
+      <div class="app-header-logo-wrap">
+        <img
+            src="@/assets/images/logo.webp"
+            alt="Tagly logo"
+            class="app-header-logo"
+        />
+      </div>
+
+      <div class="app-header-welcome">
+        Welcome, <span class="username">{{ username }}</span>!
+      </div>
+
+      <button
+          type="button"
+          class="app-header-logout"
+          @click="startLogOutProcess"
+          aria-label="Log out"
+      >
+        <font-awesome-icon
+            class="logout-icon"
+            icon="fa-solid fa-arrow-right-from-bracket"
+        />
+      </button>
+
     </div>
-    <font-awesome-icon
-        @click="startLogOutProcess"
-        class="logout-icon cursor-pointer"
-        icon="fa-solid fa-arrow-right-from-bracket"
-    />
+
     <LogOutModal
         :log-out-modal-is-open="logOutModalIsOpen"
         @event-close-modal="closeLogOutModal"
         @event-log-out-executed="executeLogOut"
     />
   </div>
-  <router-view @event-user-logged-in="updateNavMenu"/>
+
+  <router-view @event-user-logged-in="updateNavMenu" />
 </template>
 
 <script>
@@ -24,6 +44,8 @@ import LogOutModal from "@/modal/LogOutModal.vue";
 import NavigationService from "@/services/NavigationService";
 import SessionStorageService from "@/services/SessionStorageService";
 import LoginService from "@/services/LoginService";
+
+import "@/assets/css/components/header.css";
 
 export default defineComponent({
   name: 'App',
