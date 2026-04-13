@@ -1,62 +1,53 @@
 <template>
-  <div class="container text-center">
-    <div>
-      <h1>MyStuffLabelled</h1>
-    </div>
-    <div class="row justify-content-center mb-3">
-      <div class="col col-6">
-        <AlertDanger :alert-message="alertMessage" @event-alert-box-closed="resetAlertMessage"/>
+  <section class="auth-page">
+    <div class="auth-card">
+      <router-link to="/" class="auth-logo-link" aria-label="Go to home page">
+        <img src="@/assets/images/logo.webp" alt="Tagly logo" class="auth-logo" />
+      </router-link>
+
+      <div class="auth-alert">
+        <AlertDanger
+            :alert-message="alertMessage"
+            @event-alert-box-closed="resetAlertMessage"
+        />
+      </div>
+
+      <div class="auth-switch">
+        <LoginCreateAccountMenu />
+      </div>
+
+      <div class="auth-form">
+        <EmailInput
+            :email="email"
+            :email-error="emailError"
+            @event-email-updated="setEmail"
+        />
+
+        <PasswordInput
+            :password="password"
+            :password-error="passwordError"
+            @event-password-updated="setPassword"
+        />
+
+        <button
+            @click="processLogin"
+            type="button"
+            class="auth-submit-btn"
+        >
+          Log in
+        </button>
+
+        <GoogleSignInButton
+            @success="handleGoogleLoginResponse"
+            @error="handleGoogleLoginError"
+        />
       </div>
     </div>
-    <div class="container text-center">
-      <div class="row">
-        <div>
-          <LoginCreateAccountMenu/>
-        </div>
-      </div>
-    </div>
-    <div class="container text-center">
-      <div class="row justify-content-center">
-        <div class="col-10 col-md-6 col-lg-4">
-          <EmailInput
-              :email="email"
-              :email-error="emailError"
-              @event-email-updated="setEmail"/>
-
-          <PasswordInput
-              :password="password"
-              :password-error="passwordError"
-              @event-password-updated="setPassword"
-          />
-
-          <div class="form-floating">
-            <button @click="processLogin"
-                    type="button"
-                    class="btn btn-custom btn-large"
-            >
-              Go!
-            </button>
-          </div>
-
-          <GoogleSignInButton
-              @success="handleGoogleLoginResponse"
-              @error="handleGoogleLoginError"
-          />
-
-        </div>
-      </div>
-    </div>
-  </div>
+  </section>
 </template>
 
-<style scoped>
-h1 {
-  margin-top: 30px; /* to push the h1 lower */
-  margin-bottom: 40px; /*to push the next block lower*/
-}
-</style>
-
 <script>
+import "@/assets/css/views/auth-view.css";
 import LoginService from "@/services/LoginService";
 import AlertDanger from "@/modal/AlertDanger.vue";
 import NavigationService from "@/services/NavigationService";

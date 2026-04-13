@@ -1,0 +1,121 @@
+.auth-field {
+    width: 100%;
+}
+
+.auth-field__control {
+    position: relative;
+    width: 100%;
+}
+
+.auth-field__input {
+    width: 100%;
+    min-height: 3.7rem;
+    padding: 1.35rem 1rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background: var(--card);
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.2;
+    outline: none;
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.auth-field__input::placeholder {
+    color: transparent;
+}
+
+.auth-field__input:focus {
+    border-color: rgba(19, 79, 92, 0.45);
+    box-shadow: 0 0 0 4px rgba(19, 79, 92, 0.1);
+}
+
+.auth-field__input--invalid {
+    border-color: #c84b31;
+    box-shadow: 0 0 0 3px rgba(200, 75, 49, 0.08);
+}
+
+.auth-field__label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+    transition:
+            top 0.18s ease,
+            transform 0.18s ease,
+            font-size 0.18s ease,
+            color 0.18s ease;
+    background: transparent;
+}
+
+.auth-field__input:focus + .auth-field__label,
+.auth-field__input:not(:placeholder-shown) + .auth-field__label {
+    top: 0.9rem;
+    transform: translateY(0);
+    font-size: 0.78rem;
+    color: var(--primary);
+}
+
+.auth-field__error {
+    min-height: 1.15rem;
+    margin-top: 0.35rem;
+    padding-left: 0.2rem;
+    color: #c84b31;
+    font-size: 0.84rem;
+    line-height: 1.25;
+}
+
+.auth-field__input--with-toggle {
+    padding-right: 3rem;
+}
+
+.auth-field__toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.95rem;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.auth-field__toggle:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.auth-field__toggle:focus-visible {
+    outline: 2px solid rgba(19, 79, 92, 0.18);
+    outline-offset: 2px;
+    border-radius: 0.4rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .auth-field__toggle:hover {
+        color: var(--primary);
+    }
+}
+
+@media (min-width: 860px) {
+    .auth-field__input {
+        min-height: 3.8rem;
+        font-size: 1.02rem;
+    }
+}

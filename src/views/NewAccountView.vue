@@ -1,45 +1,63 @@
 <template>
-  <div class="container text-center">
-    <div>
-      <h1>MyStuffLabelled</h1>
-    </div>
-    <div class="row justify-content-center mb-3">
-      <div class="col col-6">
-        <AlertSuccess :alert-message="alertSuccessMessage"/>
+  <section class="auth-page">
+    <div class="auth-card">
+      <router-link to="/" class="auth-logo-link" aria-label="Go to home page">
+        <img src="@/assets/images/logo.webp" alt="Tagly logo" class="auth-logo" />
+      </router-link>
+
+      <div class="auth-alert">
+        <AlertSuccess :alert-message="alertSuccessMessage" />
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <LoginCreateAccountMenu/>
+
+      <div class="auth-switch">
+        <LoginCreateAccountMenu />
       </div>
-    </div>
-    <div v-if="displayAddUserForm" class="row justify-content-center">
-      <div class="col col-4">
-        <UsernameInput :username="user.username" :username-error="usernameError"
-                       @event-username-updated="setUserUsername"/>
-        <PasswordInput :password="user.password" :password-error="passwordError"
-                       @event-password-updated="setUserPassword"/>
-        <EmailInput :email="user.email" :email-error="emailError"
-                      @event-email-updated = "setUserEmail"/>
-        <div class="form-floating">
-          <button @click="addNewUser" type="button" class="btn btn-custom btn-large">Sign up!</button>
-        </div>
+
+      <div v-if="displayAddUserForm" class="auth-form">
+        <UsernameInput
+            :username="user.username"
+            :username-error="usernameError"
+            @event-username-updated="setUserUsername"
+        />
+
+        <PasswordInput
+            :password="user.password"
+            :password-error="passwordError"
+            @event-password-updated="setUserPassword"
+        />
+
+        <EmailInput
+            :email="user.email"
+            :email-error="emailError"
+            @event-email-updated="setUserEmail"
+        />
+
+        <button
+            @click="addNewUser"
+            type="button"
+            class="auth-submit-btn"
+        >
+          Create account
+        </button>
+
         <GoogleSignInButton
             @success="handleGoogleLoginResponse"
             @error="handleGoogleLoginError"
         />
       </div>
+
+      <div v-else class="auth-success-state">
+        <p class="auth-redirect-note">
+          Redirecting to login in a few seconds...
+        </p>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
-<style scoped>
-h1 {
-  margin-top: 30px; /* to push the h1 lower */
-  margin-bottom: 40px; /*to push the next block lower*/
-}
-</style>
 
 <script>
+import "@/assets/css/views/auth-view.css";
+
 import AlertSuccess from "@/modal/AlertSuccess.vue";
 import LoginCreateAccountMenu from "@/components/LoginCreateAccountMenu.vue";
 import UserService from "@/services/UserService";
