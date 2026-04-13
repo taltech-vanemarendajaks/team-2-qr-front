@@ -16,6 +16,6 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/team-2-qr-front
-            git pull origin main
+            git pull origin master
             npm install
             pm2 restart frontend || pm2 start "npm run serve" --name frontend
