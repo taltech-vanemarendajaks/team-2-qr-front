@@ -34,30 +34,6 @@
 
 }
 
-.header-bar {
-    height: 70px; /* header size */
-    display: flex;
-    align-items: center; /* vertically center content */
-    justify-content: center; /* center the welcome message */
-    font-size: 1.6rem !important;
-    position: relative; /* ← THIS makes absolute children position correctly */
-}
-
-.welcome-text {
-    white-space: nowrap; /* stays on one line */
-}
-
-.logout-icon {
-    position: absolute;
-    right: 100px; /*m bigger number pushes it to the left*/
-    font-size: 1.6rem;
-}
-
-.logout-icon:hover {
-    color: #869770; /* match your button hover color */
-    transform: scale(1.15); /* pop effect */
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35); /* subtle glow/shadow */
-}
 
 .modal-overlay {
     position: fixed; /* attach to viewport, not header */
@@ -88,63 +64,6 @@
     justify-content: center;
     gap: 20px; /* <-- space between buttons */
 }
-
-.items-table-wrapper {
-    display: flex;
-    justify-content: center; /* center horizontally */
-    margin-top: 20px;
-}
-
-.items-table {
-    width: 40%; /* take only 60% of screen */
-    background-color: #a2c4c9; /* your background color */
-    color: #050811; /* your text color */
-    border-radius: 12px;
-    overflow: hidden; /* keeps rounded corners clean */
-    border-collapse: collapse; /* cleaner edges */
-    /* table-layout: fixed; FIXES uneven header space */
-    font-size: 1.1rem;
-    display: table; /* ensures proper layout */
-}
-
-/* Table header styling */
-.items-table thead th {
-    background-color: #7fa3a8; /* slightly darker header */
-    color: #050811;
-    font-weight: bold;
-    text-align: center;
-    font-size: 1.2rem;
-}
-
-/* Table body text */
-.items-table tbody td {
-    vertical-align: middle;
-    text-align: center;
-}
-
-/* Hover effect */
-.items-table tbody tr:hover {
-    background-color: #91b5ba; /* subtle darker hover */
-    color: #050811;
-    cursor: pointer;
-}
-
-.items-table th,
-.items-table td {
-    padding: 14px 20px; /* more space */
-    text-align: center;
-}
-.table-icon {
-    font-size: 1.4rem;
-    color: #050811;                 /* dark text */
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.table-icon:hover {
-    transform: scale(1.3);          /* pop effect */
-    color: #fc9d0d;
-}
-
 
 /* Container: fields + image side by side */
 .details-layout {
