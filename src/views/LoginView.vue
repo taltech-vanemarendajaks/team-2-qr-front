@@ -8,7 +8,7 @@
       <div class="auth-alert">
         <AlertDanger
             :alert-message="alertMessage"
-            @event-alert-box-closed="resetAlertMessage"
+            @event-close="resetAlertMessage"
         />
       </div>
 
@@ -29,6 +29,10 @@
             @event-password-updated="setPassword"
         />
 
+        <div class="login-forgot-link">
+          <router-link to="/forgot-password">Forgot password?</router-link>
+        </div>
+
         <button
             @click="processLogin"
             type="button"
@@ -45,6 +49,14 @@
     </div>
   </section>
 </template>
+
+<style scoped>
+.login-forgot-link {
+  text-align: right;
+  font-size: 0.9rem;
+  margin-top: -0.25rem;
+}
+</style>
 
 <script>
 import "@/assets/css/views/auth-view.css";
@@ -140,7 +152,7 @@ export default {
       if (status === 429) {
         this.password = ''
         this.showAlert(
-            'Too many attempts. Please try again in a moment. If you’re having trouble remembering your password, password reset via email will be available soon.'
+            'Too many attempts. Please try again in a moment. You can also reset your password using the "Forgot password?" link.'
         )
         return
       }

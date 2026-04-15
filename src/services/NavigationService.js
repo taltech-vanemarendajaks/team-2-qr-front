@@ -9,6 +9,12 @@ export default {
     navigateToLoginView() {
         safePush({name: 'loginRoute'})
     },
+    navigateToForgotPasswordView() {
+        safePush({name: 'forgotPasswordRoute'})
+    },
+    navigateToChangePasswordView() {
+        safePush({name: 'changePasswordRoute'})
+    },
     navigateToItemsView() {
         safePush({name: 'itemsRoute'})
     },

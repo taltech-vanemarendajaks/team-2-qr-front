@@ -44,9 +44,73 @@
     letter-spacing: 0.02em;
 }
 
-.app-header-logout {
+.app-header-actions {
     grid-area: logout;
     justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.settings-menu-wrap {
+    position: relative;
+}
+
+.settings-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 10rem;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(19, 79, 92, 0.12);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.settings-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.settings-dropdown-item:hover {
+    background-color: var(--soft);
+    color: var(--primary);
+}
+
+.app-header-settings {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.settings-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.settings-icon--open {
+    transform: rotate(45deg);
+    color: var(--primary);
+}
+
+.app-header-logout {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -117,6 +181,15 @@
 
     .app-header-logout:hover .logout-icon {
         transform: translateX(0.125rem);
+        color: var(--primary);
+    }
+
+    .app-header-settings:hover {
+        transform: scale(1.1);
+    }
+
+    .app-header-settings:hover .settings-icon {
+        transform: rotate(45deg);
         color: var(--primary);
     }
 }
