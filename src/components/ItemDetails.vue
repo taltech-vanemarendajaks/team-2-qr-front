@@ -1,46 +1,58 @@
 <template>
-  <div v-if="isView" class="details-header">
-    <h1 class="details-title">View item #{{ item.itemName }}</h1>
-    <div v-if="qrCode" class="details-qr">
-      <QrImage :qr-code="qrCode"/>
-    </div>
-  </div>
-  <!--ItemDetails-->
-  <div class="details-layout">
+  <div class="item-details">
     <div class="item-details-form">
-      <!-- Item -->
       <div class="detail-row">
-        <span class="detail-label">Item</span>
-        <input :value="item.itemName" type="text" class="form-control detail-input" :readonly="isView"
-               @input="$emit('event-item-name-updated', $event.target.value)"
+        <label class="detail-label" for="item-name">Item</label>
+        <input
+            id="item-name"
+            :value="item.itemName"
+            type="text"
+            class="detail-input"
+            :readonly="isView"
+            @input="$emit('event-item-name-updated', $event.target.value)"
         />
       </div>
-      <!-- Date of Purchase-->
+
       <div class="detail-row">
-        <span class="detail-label">Date of Purchase</span>
-        <input :value="item.itemDate" type="date" class="form-control detail-input" :readonly="isView"
-               @input="$emit('event-item-date-updated', $event.target.value)"
+        <label class="detail-label" for="item-date">Date of purchase</label>
+        <input
+            id="item-date"
+            :value="item.itemDate"
+            type="date"
+            class="detail-input"
+            :readonly="isView"
+            @input="$emit('event-item-date-updated', $event.target.value)"
         />
       </div>
-      <!-- Model -->
+
       <div class="detail-row">
-        <span class="detail-label">Model</span>
-        <input :value="item.model" type="text" class="form-control detail-input" :readonly="isView"
-               @input="$emit('event-item-model-updated', $event.target.value)"
+        <label class="detail-label" for="item-model">Model</label>
+        <input
+            id="item-model"
+            :value="item.model"
+            type="text"
+            class="detail-input"
+            :readonly="isView"
+            @input="$emit('event-item-model-updated', $event.target.value)"
         />
       </div>
-      <!-- Comment -->
+
       <div class="detail-row">
-        <span class="detail-label">Comment</span>
+        <label class="detail-label" for="item-comment">Comment</label>
         <textarea
-            :value="item.comment" class="form-control detail-input detail-comment" :readonly="isView"
+            id="item-comment"
+            :value="item.comment"
+            class="detail-input detail-input--textarea"
+            :readonly="isView"
+            rows="4"
             @input="$emit('event-item-comment-updated', $event.target.value)"
-            rows="2"></textarea>
+        ></textarea>
       </div>
     </div>
-    <!-- image -->
+
     <div class="details-image-panel">
-      <ItemImage :imageData="item.imageData"/>
+      <ItemImage :image-data="item.imageData" />
+
       <ImageInput
           v-if="!isView"
           @event-new-image-selected="onNewImageSelected"
@@ -53,15 +65,13 @@
 <script>
 import ItemImage from "@/components/ItemImage.vue";
 import ImageInput from "@/components/inputs/ImageInput.vue";
-import QrImage from "@/components/QrImage.vue";
 
 export default {
   name: "ItemDetails",
-  components: {ImageInput, ItemImage, QrImage},
+  components: { ItemImage, ImageInput },
   props: {
     isView: Boolean,
-    item: Object,
-    qrCode: String
+    item: Object
   },
   methods: {
     onNewImageSelected(base64) {
@@ -69,7 +79,7 @@ export default {
     },
     onImageCleared() {
       this.$emit("event-chosen-image-cleared");
-    },
+    }
   }
-}
+};
 </script>
