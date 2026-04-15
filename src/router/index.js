@@ -8,6 +8,9 @@ import ItemView from "@/views/ItemView.vue";
 import SessionStorageService from "@/services/SessionStorageService";
 import LoginService from "@/services/LoginService";
 import NotAuthorizedView from "@/views/NotAuthorizedView.vue";
+import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
+import ResetPasswordView from "@/views/ResetPasswordView.vue";
+import ChangePasswordView from "@/views/ChangePasswordView.vue";
 
 const routes = [
     {
@@ -46,6 +49,22 @@ const routes = [
         path: '/not-authorized',
         name: 'notAuthorizedRoute',
         component: NotAuthorizedView
+    },
+    {
+        path: '/forgot-password',
+        name: 'forgotPasswordRoute',
+        component: ForgotPasswordView
+    },
+    {
+        path: '/reset-password',
+        name: 'resetPasswordRoute',
+        component: ResetPasswordView
+    },
+    {
+        path: '/change-password',
+        name: 'changePasswordRoute',
+        component: ChangePasswordView,
+        meta: { requiresAuth: true }
     },
 ]
 

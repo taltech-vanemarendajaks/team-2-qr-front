@@ -1,6 +1,6 @@
 /* ===== Items page ===== */
 .items-view {
-    min-height: 100vh;
+    flex: 1;
     background-color: var(--bg);
 }
 

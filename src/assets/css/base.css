@@ -39,6 +39,8 @@
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    overflow: hidden;
     background-color: var(--bg);
     color: var(--text);
     font-family: 'Inter', sans-serif;
@@ -55,8 +57,19 @@ p {
     line-height: 1.5;
 }
 
-body {
-    min-height: 100vh;
+#app {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.app-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 img {

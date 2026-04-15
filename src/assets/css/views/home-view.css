@@ -1,5 +1,5 @@
 .home-view {
-    min-height: 100vh;
+    flex: 1;
     background: var(--bg);
 }
 
@@ -174,7 +174,7 @@
     }
 
     .home-view__inner {
-        min-height: calc(100vh - 5.5rem);
+        min-height: 0;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 2.5rem;
         padding: clamp(1.5rem, 3vh, 2.5rem) 2rem clamp(2rem, 5vh, 4.5rem);

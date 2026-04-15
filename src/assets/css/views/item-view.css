@@ -1,5 +1,5 @@
 .item-page {
-    min-height: 100%;
+    flex: 1;
     background: var(--bg);
     color: var(--text);
     padding: 1rem 0 2rem;
@@ -214,7 +214,6 @@
 
 @media (min-width: 860px) {
     .item-page {
-        min-height: 100vh;
         background: var(--bg-desktop);
         padding: 1rem 0 2rem;
     }

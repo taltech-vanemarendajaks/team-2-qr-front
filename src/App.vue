@@ -3,28 +3,52 @@
     <div class="app-header-row">
 
       <div class="app-header-logo-wrap">
-        <img
-            src="@/assets/images/logo.webp"
-            alt="Tagly logo"
-            class="app-header-logo"
-        />
+        <router-link to="/items" aria-label="Go to items">
+          <img
+              src="@/assets/images/logo.webp"
+              alt="Tagly logo"
+              class="app-header-logo"
+          />
+        </router-link>
       </div>
 
       <div class="app-header-welcome">
         Welcome, <span class="username">{{ username }}</span>!
       </div>
 
-      <button
-          type="button"
-          class="app-header-logout"
-          @click="startLogOutProcess"
-          aria-label="Log out"
-      >
-        <font-awesome-icon
-            class="logout-icon"
-            icon="fa-solid fa-arrow-right-from-bracket"
-        />
-      </button>
+      <div class="app-header-actions">
+        <div class="settings-menu-wrap" v-click-outside="closeSettingsMenu">
+          <button
+              type="button"
+              class="app-header-settings"
+              @click="toggleSettingsMenu"
+              aria-label="Settings"
+              :aria-expanded="settingsMenuOpen"
+          >
+            <font-awesome-icon
+                class="settings-icon"
+                :class="{ 'settings-icon--open': settingsMenuOpen }"
+                icon="fa-solid fa-gear"
+            />
+          </button>
+          <div v-if="settingsMenuOpen" class="settings-dropdown">
+            <button type="button" class="settings-dropdown-item" @click="goToChangePassword">
+              Change password
+            </button>
+          </div>
+        </div>
+        <button
+            type="button"
+            class="app-header-logout"
+            @click="startLogOutProcess"
+            aria-label="Log out"
+        >
+          <font-awesome-icon
+              class="logout-icon"
+              icon="fa-solid fa-arrow-right-from-bracket"
+          />
+        </button>
+      </div>
 
     </div>
 
@@ -35,7 +59,9 @@
     />
   </div>
 
-  <router-view @event-user-logged-in="updateNavMenu" />
+  <div class="app-content">
+    <router-view @event-user-logged-in="updateNavMenu" />
+  </div>
 </template>
 
 <script>
@@ -50,12 +76,28 @@ import "@/assets/css/components/header.css";
 export default defineComponent({
   name: 'App',
   components: {LogOutModal},
+  directives: {
+    clickOutside: {
+      beforeMount(el, binding) {
+        el._clickOutsideHandler = (event) => {
+          if (!el.contains(event.target)) {
+            binding.value()
+          }
+        }
+        document.addEventListener('click', el._clickOutsideHandler)
+      },
+      unmounted(el) {
+        document.removeEventListener('click', el._clickOutsideHandler)
+      }
+    }
+  },
   data() {
     return {
       isLoggedIn: false,
       isAdmin: false,
       username: '',
-      logOutModalIsOpen: false
+      logOutModalIsOpen: false,
+      settingsMenuOpen: false
     }
   },
   methods: {
@@ -94,6 +136,19 @@ export default defineComponent({
             sessionStorage.clear()
             this.updateNavMenu()
           })
+    },
+
+    toggleSettingsMenu() {
+      this.settingsMenuOpen = !this.settingsMenuOpen
+    },
+
+    closeSettingsMenu() {
+      this.settingsMenuOpen = false
+    },
+
+    goToChangePassword() {
+      this.closeSettingsMenu()
+      NavigationService.navigateToChangePasswordView()
     },
 
     updateNavMenu() {
