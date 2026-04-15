@@ -1,59 +1,93 @@
 <template>
-  <div class="mb-3">
-    <div class="input-group">
+  <div class="image-input">
+    <div class="image-input__row">
+      <label class="image-input__select modal-button" for="receipt-image-input">
+        Choose image
+      </label>
+
       <input
+          id="receipt-image-input"
           ref="fileInput"
-          class="form-control"
+          class="image-input__native"
           type="file"
+          accept="image/png,image/jpeg,image/webp"
           @change="handleImage"
-          accept="image/x-png,image/jpeg,image/gif"
+      />
+
+      <button
+          type="button"
+          class="modal-button modal-button--delete image-input__clear"
+          @click="clearFileInput"
       >
-      <button class="btn btn-outline-danger" type="button" @click="clearFileInput">
-        <font-awesome-icon icon="fa-solid fa-trash"/>
+        Remove
       </button>
     </div>
+
+    <p class="image-input__hint">
+      Accepted formats: PNG, JPG, WEBP
+    </p>
+
+    <p v-if="fileName" class="image-input__file-name">
+      Selected: {{ fileName }}
+    </p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ImageInput',
+  name: "ImageInput",
   props: {
     resetImageInput: Boolean
+  },
+  emits: ["event-new-image-selected", "event-chosen-image-cleared"],
+  data() {
+    return {
+      fileName: ""
+    };
   },
   watch: {
     resetImageInput(newValue) {
       if (newValue) {
-        this.clearFileInput()
+        this.clearFileInput();
       }
-    },
+    }
   },
   methods: {
-
     handleImage(event) {
-      const selectedImage = event.target.files[0];
+      const selectedImage = event.target.files?.[0];
+
+      if (!selectedImage) {
+        this.fileName = "";
+        return;
+      }
+
+      this.fileName = selectedImage.name;
       this.emitBase64(selectedImage);
     },
 
     emitBase64(fileObject) {
       const reader = new FileReader();
+
       reader.onload = () => {
-        let imageDataBase64 = reader.result;
-        this.$emit('event-new-image-selected', imageDataBase64)
+        const imageDataBase64 = reader.result;
+        this.$emit("event-new-image-selected", imageDataBase64);
       };
-      reader.onerror = function (error) {
-        alert(error);
-      }
+
+      reader.onerror = () => {
+        this.fileName = "";
+      };
+
       reader.readAsDataURL(fileObject);
     },
 
     clearFileInput() {
       if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
-        this.$emit('event-chosen-image-cleared')
+        this.$refs.fileInput.value = "";
       }
-    },
 
+      this.fileName = "";
+      this.$emit("event-chosen-image-cleared");
+    }
   }
-}
+};
 </script>

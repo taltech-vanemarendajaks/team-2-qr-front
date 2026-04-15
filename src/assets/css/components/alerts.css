@@ -1,0 +1,51 @@
+.app-alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--line);
+
+    font-size: 0.95rem;
+    line-height: 1.3;
+
+    box-shadow: var(--card-shadow);
+}
+
+.app-alert--danger {
+    background: #fdecea;
+    color: #7a2f2f;
+}
+
+.app-alert--success {
+    background: #edf7ed;
+    color: #2f6f3a;
+}
+
+.app-alert__text {
+    flex: 1;
+}
+
+.app-alert__close {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0;
+}
+
+.app-alert__close:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem var(--focus-ring);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .app-alert__close:hover {
+        color: var(--text);
+    }
+}
