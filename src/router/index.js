@@ -11,6 +11,7 @@ import NotAuthorizedView from "@/views/NotAuthorizedView.vue";
 import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
 import ResetPasswordView from "@/views/ResetPasswordView.vue";
 import ChangePasswordView from "@/views/ChangePasswordView.vue";
+import AdminView from "@/views/AdminView.vue";
 
 const routes = [
     {
@@ -65,6 +66,12 @@ const routes = [
         name: 'changePasswordRoute',
         component: ChangePasswordView,
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin',
+        name: 'adminRoute',
+        component: AdminView,
+        meta: { requiresAuth: true, requiresAdmin: true }
     },
 ]
 
