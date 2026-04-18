@@ -3,7 +3,7 @@ import axios from "axios";
 export default {
 
     sendPostItemRequest(userId, item) {
-        return axios.post('/item', item, {
+        return axios.post('/api/item', item, {
             params: {
                 userId: userId
             }
@@ -11,7 +11,7 @@ export default {
     },
 
     sendGetItemsRequest(userId) {
-        return axios.get('/items', {
+        return axios.get('/api/item/all', {
             params: {
                 userId: userId
             }
@@ -19,14 +19,14 @@ export default {
     },
 
     sendGetItemRequest(itemId) {
-        return axios.get('/item', {
+        return axios.get('/api/item', {
             params: {
                 itemId: itemId
             }
         })
     },
     sendPutItemRequest(itemId, item) {
-        return axios.put('/item', item, {
+        return axios.put('/api/item', item, {
             params: {
                 itemId: itemId
             }
@@ -34,7 +34,7 @@ export default {
     },
 
     sendDeleteItem(itemId) {
-        return axios.delete('/item', {
+        return axios.delete('/api/item', {
             params: {
                 itemId: itemId
             }
@@ -42,7 +42,7 @@ export default {
     },
 
     sendDeleteItemImageRequest(itemId, imageId) {
-        return axios.delete(`/${itemId}/images/${imageId}`);
+        return axios.delete(`/api/item/${itemId}/images/${imageId}`);
     },
 
 }
