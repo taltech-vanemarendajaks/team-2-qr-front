@@ -17,17 +17,20 @@ const routes = [
     {
         path: '/',
         name: 'homeRoute',
-        component: HomeView
+        component: HomeView,
+        meta: { requiresGuest: true }
     },
     {
         path: '/login',
         name: 'loginRoute',
-        component: LoginView
+        component: LoginView,
+        meta: { requiresGuest: true }
     },
     {
         path: '/new-account',
         name: 'newAccountRoute',
-        component: NewAccountView
+        component: NewAccountView,
+        meta: { requiresGuest: true }
     },
     {
         path: '/items',
@@ -81,6 +84,10 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+    if (to.meta.requiresGuest && SessionStorageService.isLoggedIn()) {
+        return next({ name: 'itemsRoute' });
+    }
+
     if (!to.meta.requiresAuth) {
         return next();
     }
@@ -92,6 +99,10 @@ router.beforeEach(async (to, from, next) => {
         if (needsFreshUserCheck) {
             const response = await LoginService.getCurrentUser();
             const user = response.data;
+            if (!user) {
+                SessionStorageService.clearUserSession();
+                return next({ name: 'loginRoute' });
+            }
             SessionStorageService.setLoggedInUser(user);
         }
 

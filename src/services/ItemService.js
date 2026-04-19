@@ -2,47 +2,43 @@ import axios from "axios";
 
 export default {
 
-    sendPostItemRequest(userId, item) {
+    sendPostItemRequest(item) {
         return axios.post('/api/item', item, {
-            params: {
-                userId: userId
-            }
+            withCredentials: true
         })
     },
 
-    sendGetItemsRequest(userId) {
+    sendGetItemsRequest() {
         return axios.get('/api/item/all', {
-            params: {
-                userId: userId
-            }
+            withCredentials: true
         })
     },
 
     sendGetItemRequest(itemId) {
         return axios.get('/api/item', {
-            params: {
-                itemId: itemId
-            }
+            params: { itemId: itemId },
+            withCredentials: true
         })
     },
+
     sendPutItemRequest(itemId, item) {
         return axios.put('/api/item', item, {
-            params: {
-                itemId: itemId
-            }
+            params: { itemId: itemId },
+            withCredentials: true
         })
     },
 
     sendDeleteItem(itemId) {
         return axios.delete('/api/item', {
-            params: {
-                itemId: itemId
-            }
+            params: { itemId: itemId },
+            withCredentials: true
         })
     },
 
     sendDeleteItemImageRequest(itemId, imageId) {
-        return axios.delete(`/api/item/${itemId}/images/${imageId}`);
+        return axios.delete(`/api/item/${itemId}/images/${imageId}`, {
+            withCredentials: true
+        });
     },
 
 }

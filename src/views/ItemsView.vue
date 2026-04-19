@@ -335,10 +335,9 @@ export default {
     },
 
     loadItems() {
-      const userId = sessionStorage.getItem("userId");
       this.isLoading = true;
 
-      ItemsService.sendGetItemsRequest(userId)
+      ItemsService.sendGetItemsRequest()
           .then(response => {
             this.items = response.data;
             this.currentPage = 1;

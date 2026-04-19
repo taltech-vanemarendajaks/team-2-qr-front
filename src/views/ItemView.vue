@@ -144,6 +144,7 @@ export default {
       isView: false,
       isAdd: false,
       isEdit: false,
+      editEnteredFromList: false,
       qrCode: "",
       deleteItemModalIsOpen: false,
 
@@ -252,7 +253,7 @@ export default {
     },
 
     executeAddItem() {
-      ItemService.sendPostItemRequest(this.userId, this.item)
+      ItemService.sendPostItemRequest(this.item)
           .then(() => this.handleAddItemResponse())
           .catch((error) => {
             if (this.itemNameAlreadyExists(error)) {
@@ -389,10 +390,14 @@ export default {
     },
 
     disableEdit() {
-      this.isEdit = false;
-      this.isView = true;
       if (this.originalItem) {
         this.item = JSON.parse(JSON.stringify(this.originalItem));
+      }
+      this.isEdit = false;
+      if (this.editEnteredFromList) {
+        NavigationService.navigateToItemsView();
+      } else {
+        this.isView = true;
       }
     },
 
@@ -415,6 +420,7 @@ export default {
     SessionStorageService.clearItemMode();
 
     if (mode === "edit") {
+      this.editEnteredFromList = true;
       this.enableEdit();
     } else if (mode === "delete") {
       this.displayDeleteItemModal();
