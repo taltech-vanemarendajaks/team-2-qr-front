@@ -127,10 +127,18 @@ export default defineComponent({
       LoginService.getCurrentUser()
           .then(response => {
             const user = response.data
+            if (!user) {
+              sessionStorage.clear()
+              this.updateNavMenu()
+              return
+            }
             sessionStorage.setItem('userId', user.userId)
             sessionStorage.setItem('roleName', user.roleName)
             SessionStorageService.setUsername(user.username)
             this.updateNavMenu()
+            if (this.$route.meta.requiresGuest) {
+              this.$router.push({ name: 'itemsRoute' })
+            }
           })
           .catch(() => {
             sessionStorage.clear()

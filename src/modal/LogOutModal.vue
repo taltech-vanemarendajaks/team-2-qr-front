@@ -36,6 +36,7 @@ export default {
   components: { Modal },
   props: {
     logOutModalIsOpen: Boolean
-  }
+  },
+  emits: ['event-close-modal', 'event-log-out-executed']
 }
 </script>
