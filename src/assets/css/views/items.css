@@ -37,7 +37,6 @@
 }
 
 .items-add-button:active,
-.items-sort-button:active,
 .items-page-button:active {
     transform: scale(0.97);
 }
@@ -121,42 +120,53 @@
     color: var(--primary);
 }
 
-/* ===== Controls ===== */
-.items-controls {
+.items-table-actions {
     display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.items-sort-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    align-items: center;
     gap: 0.5rem;
+    flex-wrap: nowrap;
 }
 
-.items-sort-button {
+/* ===== Table header sorting ===== */
+.items-header-sort {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.3rem;
-    min-height: 2.5rem;
-    padding: 0.625rem 0.875rem;
-    border: 0.0625rem solid var(--line-strong);
-    border-radius: 999rem;
-    background-color: var(--white);
-    color: var(--text);
+    gap: 0.35rem;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
     font: inherit;
-    font-size: 0.95rem;
-    line-height: 1.1;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.items-sort-button.active {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: var(--white);
+.items-header-sort-icons {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 0.8;
+    font-size: 0.7rem;
+    color: var(--placeholder);
+}
+
+.items-header-sort-icons span {
+    opacity: 0.4;
+    transition: opacity 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.items-header-sort-icons span.active {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.items-header-sort:focus-visible {
+    outline: 0.125rem solid var(--focus-ring);
+    outline-offset: 0.2rem;
+    border-radius: 0.35rem;
 }
 
 /* ===== Results area ===== */
@@ -423,15 +433,6 @@
         box-shadow: var(--button-shadow);
     }
 
-    .items-sort-button:hover {
-        border-color: var(--primary);
-        color: var(--primary);
-    }
-
-    .items-sort-button.active:hover {
-        color: var(--white);
-    }
-
     .item-card-name:hover,
     .items-table-link:hover {
         color: var(--primary);
@@ -453,5 +454,13 @@
         color: var(--action-hover);
         transform: scale(1.18);
         filter: drop-shadow(0 0.1rem 0.2rem var(--action-hover-shadow));
+    }
+
+    .items-header-sort:hover {
+        color: var(--primary);
+    }
+
+    .items-header-sort:hover .items-header-sort-icons span {
+        opacity: 0.75;
     }
 }
