@@ -2,7 +2,7 @@
   <div class="item-details">
     <div class="item-details-form">
       <div class="detail-row">
-        <label class="detail-label" for="item-name">Item</label>
+        <label class="detail-label" for="item-name">Item*</label>
         <input
             id="item-name"
             :value="item.itemName"
@@ -14,14 +14,15 @@
       </div>
 
       <div class="detail-row">
-        <label class="detail-label" for="item-date">Date of purchase</label>
-        <input
-            id="item-date"
-            :value="item.itemDate"
-            type="date"
-            class="detail-input"
-            :readonly="isView"
-            @input="$emit('event-item-date-updated', $event.target.value)"
+        <label class="detail-label" for="item-date">Purchase Date*</label>
+        <VueDatePicker
+            v-model="localDate"
+            :enable-time-picker="false"
+            :max-date="today"
+            :week-start="1"
+            :disabled="isView"
+            format="dd/MM/yyyy"
+            input-class-name="detail-input"
         />
       </div>
 
@@ -65,14 +66,42 @@
 <script>
 import ItemImage from "@/components/ItemImage.vue";
 import ImageInput from "@/components/inputs/ImageInput.vue";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
   name: "ItemDetails",
-  components: { ItemImage, ImageInput },
+  components: { ItemImage, ImageInput, VueDatePicker  },
   props: {
     isView: Boolean,
     item: Object
   },
+
+  computed: {
+    today() {
+      return new Date();
+    },
+
+    localDate: {
+      get() {
+        return this.item.itemDate ? new Date(this.item.itemDate) : null;
+      },
+      set(value) {
+        if (!value) {
+          this.$emit("event-item-date-updated", "");
+          return;
+        }
+
+        const year = value.getFullYear();
+        const month = String(value.getMonth() + 1).padStart(2, "0");
+        const day = String(value.getDate()).padStart(2, "0");
+
+        const formatted = `${year}-${month}-${day}`;
+        this.$emit("event-item-date-updated", formatted);
+      }
+    }
+  },
+
   methods: {
     onNewImageSelected(base64) {
       this.$emit("event-new-image-selected", base64);

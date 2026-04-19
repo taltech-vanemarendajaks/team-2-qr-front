@@ -29,9 +29,9 @@
       <div v-else class="item-content">
         <div class="item-top">
           <div class="item-title-wrap">
-            <h1 class="item-title" v-if="isAdd">Add new item</h1>
-            <h1 class="item-title" v-else-if="isEdit">Edit item #{{ item.itemName }}</h1>
-            <h1 class="item-title" v-else>View item #{{ item.itemName }}</h1>
+            <h1 class="item-title" v-if="isAdd">Add New Item</h1>
+            <h1 class="item-title" v-else-if="isEdit">Edit Item #{{ item.itemName }}</h1>
+            <h1 class="item-title" v-else>View Item #{{ item.itemName }}</h1>
           </div>
 
           <div v-if="qrCode && !isAdd" class="item-qr-wrap">
@@ -85,7 +85,7 @@
                 class="modal-button"
                 @click="disableEdit"
             >
-              Close edit
+              Close
             </button>
 
             <button
