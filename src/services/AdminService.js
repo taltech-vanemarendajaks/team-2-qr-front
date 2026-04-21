@@ -1,7 +1,7 @@
-import axios from "axios";
+import api from "./api";
 
 export default {
     getAllUsers() {
-        return axios.get('/api/admin/users', { withCredentials: true });
+        return api.get('/api/admin/users', { withCredentials: true });
     }
 }

@@ -1,9 +1,9 @@
-import axios from "axios";
+import api from "./api";
 
 export default {
 
     sendGetQrCodeRequest(itemId) {
-        return axios.get('/api/qr-code', {
+        return api.get('/api/qr-code', {
             params: { itemId: itemId },
             withCredentials: true
         })

@@ -1,8 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 export default {
     login(email, password) {
-        return axios.post(
+        return api.post(
             "/api/auth/login",
             { email, password },
             { withCredentials: true }
@@ -10,7 +10,7 @@ export default {
     },
 
     googleLogin(idToken) {
-        return axios.post(
+        return api.post(
             "/api/auth/google",
             { idToken },
             { withCredentials: true }
@@ -18,13 +18,13 @@ export default {
     },
 
     getCurrentUser() {
-        return axios.get("/api/auth/me", {
+        return api.get("/api/auth/me", {
             withCredentials: true
         });
     },
 
     logout() {
-        return axios.post(
+        return api.post(
             "/api/auth/logout",
             {},
             { withCredentials: true }
