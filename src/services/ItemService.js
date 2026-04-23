@@ -1,42 +1,42 @@
-import axios from "axios";
+import api from "./api";
 
 export default {
 
     sendPostItemRequest(item) {
-        return axios.post('/api/item', item, {
+        return api.post('/api/item', item, {
             withCredentials: true
         })
     },
 
     sendGetItemsRequest() {
-        return axios.get('/api/item/all', {
+        return api.get('/api/item/all', {
             withCredentials: true
         })
     },
 
     sendGetItemRequest(itemId) {
-        return axios.get('/api/item', {
+        return api.get('/api/item', {
             params: { itemId: itemId },
             withCredentials: true
         })
     },
 
     sendPutItemRequest(itemId, item) {
-        return axios.put('/api/item', item, {
+        return api.put('/api/item', item, {
             params: { itemId: itemId },
             withCredentials: true
         })
     },
 
     sendDeleteItem(itemId) {
-        return axios.delete('/api/item', {
+        return api.delete('/api/item', {
             params: { itemId: itemId },
             withCredentials: true
         })
     },
 
     sendDeleteItemImageRequest(itemId, imageId) {
-        return axios.delete(`/api/item/${itemId}/images/${imageId}`, {
+        return api.delete(`/api/item/${itemId}/images/${imageId}`, {
             withCredentials: true
         });
     },

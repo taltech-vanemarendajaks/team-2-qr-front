@@ -1,16 +1,16 @@
-import axios from "axios";
+import api from "./api";
 
 export default {
     forgotPassword(email) {
-        return axios.post("/api/auth/forgot-password", { email });
+        return api.post("/api/auth/forgot-password", { email });
     },
 
     resetPassword(token, newPassword) {
-        return axios.post("/api/auth/reset-password", { token, newPassword });
+        return api.post("/api/auth/reset-password", { token, newPassword });
     },
 
     changePassword(currentPassword, newPassword) {
-        return axios.post("/api/auth/change-password",
+        return api.post("/api/auth/change-password",
             { currentPassword, newPassword },
             { withCredentials: true }
         );

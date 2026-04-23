@@ -1,9 +1,9 @@
-import axios from "axios";
+import api from "./api";
 
 export default {
 
     sendPostUserRequest(user) {
-        return axios.post('/api/auth/signup', user, {
+        return api.post('/api/auth/signup', user, {
             withCredentials: true
         })
     },
