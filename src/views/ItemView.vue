@@ -41,8 +41,11 @@
 
         <div class="item-body">
           <ItemDetails
+              ref="itemDetails"
               :is-view="isView"
               :item="item"
+              :reset-image-input="resetImageInput"
+              :validation-errors="validationErrors"
               @event-item-name-updated="setItemItemName"
               @event-item-date-updated="setItemItemDate"
               @event-item-model-updated="setItemModel"
@@ -50,6 +53,16 @@
               @event-new-image-selected="setItemImageData"
               @event-chosen-image-cleared="handleDeleteImage"
           />
+
+          <div class="item-alerts item-alerts--mobile" v-if="errorMessage || successMessage">
+            <div v-if="errorMessage" class="item-alert item-alert--error">
+              {{ errorMessage }}
+            </div>
+
+            <div v-if="successMessage" class="item-alert item-alert--success">
+              {{ successMessage }}
+            </div>
+          </div>
 
           <div class="item-actions">
             <button
@@ -135,7 +148,6 @@ export default {
   data() {
     return {
       itemId: Number(useRoute().query.itemId),
-      userId: SessionStorageService.getUserId(),
       originalItem: null,
       errorMessage: "",
       successMessage: "",
@@ -156,6 +168,11 @@ export default {
         imageData: "",
         imageId: null,
         qrToken: ""
+      },
+
+      validationErrors: {
+        itemName: false,
+        itemDate: false
       },
 
       loading: false,
@@ -220,22 +237,28 @@ export default {
     validateItemInput() {
       this.resetMessages();
 
+      this.validationErrors.itemName = false;
+      this.validationErrors.itemDate = false;
+
       const trimmedName = this.item.itemName?.trim() || "";
       const selectedDate = this.item.itemDate || "";
       const todayString = this.getTodayDateString();
 
       if (!trimmedName) {
-        this.errorMessage = "Please enter item name";
-        return false;
+        this.validationErrors.itemName = true;
       }
 
       if (!selectedDate) {
-        this.errorMessage = "Please select date of purchase";
-        return false;
+        this.validationErrors.itemDate = true;
+      } else if (selectedDate > todayString) {
+        this.validationErrors.itemDate = true;
+        this.errorMessage = "Date of purchase cannot be in the future";
       }
 
-      if (selectedDate > todayString) {
-        this.errorMessage = "Date of purchase cannot be in the future";
+      if (this.validationErrors.itemName || this.validationErrors.itemDate) {
+        if (!this.errorMessage) {
+          this.errorMessage = "Please fill in required fields";
+        }
         return false;
       }
 
@@ -245,10 +268,18 @@ export default {
     resetMessages() {
       this.errorMessage = "";
       this.successMessage = "";
+      this.validationErrors.itemName = false;
+      this.validationErrors.itemDate = false;
     },
 
     processAddItem() {
-      if (!this.validateItemInput()) return;
+      if (!this.validateItemInput()) {
+        this.$nextTick(() => {
+          this.$refs.itemDetails?.scrollToFirstInvalidField?.();
+        });
+        return;
+      }
+
       this.executeAddItem();
     },
 
@@ -277,6 +308,9 @@ export default {
       this.successMessage = `New item "${this.item.itemName}" has been added!`;
       setTimeout(this.resetMessages, 4000);
       this.resetAllFields();
+      this.$nextTick(() => {
+        this.resetImageInput = false;
+      });
     },
 
     itemNameAlreadyExists(error) {
@@ -285,7 +319,13 @@ export default {
     },
 
     processUpdateItem() {
-      if (!this.validateItemInput()) return;
+      if (!this.validateItemInput()) {
+        this.$nextTick(() => {
+          this.$refs.itemDetails?.scrollToFirstInvalidField?.();
+        });
+        return;
+      }
+
       this.executeUpdateItem();
     },
 
@@ -381,6 +421,7 @@ export default {
       this.item.model = "";
       this.item.comment = "";
       this.item.imageData = "";
+      this.item.imageId = null;
       this.resetImageInput = true;
     },
 

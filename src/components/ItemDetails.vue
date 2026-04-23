@@ -5,15 +5,17 @@
         <label class="detail-label" for="item-name">Item*</label>
         <input
             id="item-name"
+            ref="itemNameInput"
             :value="item.itemName"
             type="text"
             class="detail-input"
+            :class="{ 'detail-input--error': validationErrors?.itemName }"
             :readonly="isView"
             @input="$emit('event-item-name-updated', $event.target.value)"
         />
       </div>
 
-      <div class="detail-row">
+      <div class="detail-row" ref="itemDateRow">
         <label class="detail-label" for="item-date">Purchase Date*</label>
         <VueDatePicker
             v-model="localDate"
@@ -22,7 +24,7 @@
             :week-start="1"
             :disabled="isView"
             format="dd/MM/yyyy"
-            input-class-name="detail-input"
+            :input-class-name="validationErrors?.itemDate ? 'detail-input detail-input--error' : 'detail-input'"
         />
       </div>
 
@@ -52,10 +54,17 @@
     </div>
 
     <div class="details-image-panel">
-      <ItemImage :image-data="item.imageData" />
+      <ItemImage
+          :image-data="item.imageData"
+          :is-view="isView"
+          @event-placeholder-clicked="openImagePicker"
+      />
 
       <ImageInput
           v-if="!isView"
+          ref="imageInput"
+          :reset-image-input="resetImageInput"
+          :has-image="!!item.imageData"
           @event-new-image-selected="onNewImageSelected"
           @event-chosen-image-cleared="onImageCleared"
       />
@@ -71,10 +80,12 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
   name: "ItemDetails",
-  components: { ItemImage, ImageInput, VueDatePicker  },
+  components: { ItemImage, ImageInput, VueDatePicker },
   props: {
     isView: Boolean,
-    item: Object
+    item: Object,
+    resetImageInput: Boolean,
+    validationErrors: Object
   },
 
   computed: {
@@ -108,7 +119,27 @@ export default {
     },
     onImageCleared() {
       this.$emit("event-chosen-image-cleared");
-    }
+    },
+    openImagePicker() {
+      this.$refs.imageInput?.openFilePicker?.();
+    },
+
+    scrollToFirstInvalidField() {
+      if (this.validationErrors?.itemName) {
+        this.$refs.itemNameInput?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+        return;
+      }
+
+      if (this.validationErrors?.itemDate) {
+        this.$refs.itemDateRow?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    },
   }
 };
 </script>
