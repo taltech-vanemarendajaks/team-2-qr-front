@@ -23,34 +23,6 @@
         </div>
       </div>
 
-      <div class="items-controls">
-        <div class="items-sort-wrap">
-          <button
-              type="button"
-              class="items-sort-button"
-              :class="{ active: sortField === 'itemName' }"
-              @click="changeSort('itemName')"
-          >
-            Sort by Name
-            <span v-if="sortField === 'itemName'">
-              {{ sortDirection === 'asc' ? '↑' : '↓' }}
-            </span>
-          </button>
-
-          <button
-              type="button"
-              class="items-sort-button"
-              :class="{ active: sortField === 'itemDate' }"
-              @click="changeSort('itemDate')"
-          >
-            Sort by Date
-            <span v-if="sortField === 'itemDate'">
-              {{ sortDirection === 'asc' ? '↑' : '↓' }}
-            </span>
-          </button>
-        </div>
-      </div>
-
       <div class="items-results">
 
         <div v-if="isLoading" class="items-loading">
@@ -127,8 +99,33 @@
             <table class="items-table">
               <thead>
               <tr>
-                <th>Item Name</th>
-                <th>Purchase Date</th>
+                <th>
+                  <button
+                      type="button"
+                      class="items-header-sort"
+                      @click="setSort('itemName')"
+                  >
+                    <span>Item</span>
+                    <span class="items-header-sort-icons">
+      <span :class="{ active: sortField === 'itemName' && sortDirection === 'asc' }">▲</span>
+      <span :class="{ active: sortField === 'itemName' && sortDirection === 'desc' }">▼</span>
+    </span>
+                  </button>
+                </th>
+
+                <th>
+                  <button
+                      type="button"
+                      class="items-header-sort"
+                      @click="setSort('itemDate')"
+                  >
+                    <span>Purchase Date</span>
+                    <span class="items-header-sort-icons">
+      <span :class="{ active: sortField === 'itemDate' && sortDirection === 'asc' }">▲</span>
+      <span :class="{ active: sortField === 'itemDate' && sortDirection === 'desc' }">▼</span>
+    </span>
+                  </button>
+                </th>
                 <th></th>
               </tr>
               </thead>
@@ -360,7 +357,7 @@ export default {
       return `${day}-${month}-${year}`;
     },
 
-    changeSort(field) {
+    setSort(field) {
       if (this.sortField === field) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
       } else {
