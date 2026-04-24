@@ -35,7 +35,7 @@
           </div>
 
           <div v-if="qrCode && !isAdd" class="item-qr-wrap">
-            <QrImage :qr-code="qrCode" />
+            <QrImage :qr-code="qrCode" :size="56"/>
           </div>
         </div>
 

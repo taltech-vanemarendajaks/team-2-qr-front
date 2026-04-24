@@ -19,12 +19,14 @@
         <label class="detail-label" for="item-date">Purchase Date*</label>
         <VueDatePicker
             v-model="localDate"
-            :enable-time-picker="false"
+            class="detail-datepicker"
+            :class="{ 'detail-datepicker--error': validationErrors?.itemDate }"
+            :time-config="{ enableTimePicker: false }"
             :max-date="today"
             :week-start="1"
             :disabled="isView"
-            format="dd/MM/yyyy"
-            :input-class-name="validationErrors?.itemDate ? 'detail-input detail-input--error' : 'detail-input'"
+            :format="formatDateForPicker"
+            model-type="yyyy-MM-dd"
         />
       </div>
 
@@ -75,7 +77,7 @@
 <script>
 import ItemImage from "@/components/ItemImage.vue";
 import ImageInput from "@/components/inputs/ImageInput.vue";
-import VueDatePicker from '@vuepic/vue-datepicker';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
@@ -95,20 +97,10 @@ export default {
 
     localDate: {
       get() {
-        return this.item.itemDate ? new Date(this.item.itemDate) : null;
+        return this.item.itemDate ? this.item.itemDate.slice(0, 10) : null;
       },
       set(value) {
-        if (!value) {
-          this.$emit("event-item-date-updated", "");
-          return;
-        }
-
-        const year = value.getFullYear();
-        const month = String(value.getMonth() + 1).padStart(2, "0");
-        const day = String(value.getDate()).padStart(2, "0");
-
-        const formatted = `${year}-${month}-${day}`;
-        this.$emit("event-item-date-updated", formatted);
+        this.$emit("event-item-date-updated", value || "");
       }
     }
   },
@@ -139,6 +131,21 @@ export default {
           block: "center"
         });
       }
+    },
+
+    formatDateForPicker(value) {
+      if (!value) return "";
+
+      if (typeof value === "string") {
+        const [year, month, day] = value.slice(0, 10).split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      const day = String(value.getDate()).padStart(2, "0");
+      const month = String(value.getMonth() + 1).padStart(2, "0");
+      const year = value.getFullYear();
+
+      return `${day}/${month}/${year}`;
     },
   }
 };
