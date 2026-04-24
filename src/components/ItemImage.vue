@@ -20,13 +20,20 @@
       />
     </button>
 
-    <div v-else class="item-image__frame item-image__frame--placeholder">
+    <button
+        v-else
+        type="button"
+        class="item-image__frame item-image__frame--interactive item-image__frame--placeholder"
+        :disabled="isView"
+        :aria-label="isView ? 'Receipt placeholder image' : 'Add receipt image'"
+        @click="handlePlaceholderClick"
+    >
       <img
           src="../assets/images/placeholder_receipt.webp"
           class="item-image__img"
           alt="Placeholder image for a receipt"
       />
-    </div>
+    </button>
   </div>
 </template>
 
@@ -37,8 +44,10 @@ export default {
   name: "ItemImage",
   components: { ImagePreviewModal },
   props: {
-    imageData: String
+    imageData: String,
+    isView: Boolean
   },
+  emits: ["event-placeholder-clicked"],
   data() {
     return {
       imagePreviewModalIsOpen: false
@@ -53,6 +62,11 @@ export default {
     openPreview() {
       if (!this.hasImage) return;
       this.imagePreviewModalIsOpen = true;
+    },
+
+    handlePlaceholderClick() {
+      if (this.isView) return;
+      this.$emit("event-placeholder-clicked");
     }
   }
 };

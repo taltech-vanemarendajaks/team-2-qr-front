@@ -15,6 +15,7 @@
       />
 
       <button
+          v-if="hasImage || fileName"
           type="button"
           class="modal-button modal-button--delete image-input__clear"
           @click="clearFileInput"
@@ -40,7 +41,8 @@ const ALLOWED_TYPES = ["image/png", "image/jpeg"];
 export default {
   name: "ImageInput",
   props: {
-    resetImageInput: Boolean
+    resetImageInput: Boolean,
+    hasImage: Boolean
   },
   emits: [
     "event-new-image-selected",
@@ -60,6 +62,10 @@ export default {
     }
   },
   methods: {
+    openFilePicker() {
+      this.$refs.fileInput?.click();
+    },
+
     handleImage(event) {
       const selectedImage = event.target.files?.[0];
 
