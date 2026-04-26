@@ -101,7 +101,7 @@ router.beforeEach(async (to, from, next) => {
             const user = response.data;
             if (!user) {
                 SessionStorageService.clearUserSession();
-                return next({ name: 'loginRoute' });
+                return next({ name: 'loginRoute', query: { redirect: to.fullPath } });
             }
             SessionStorageService.setLoggedInUser(user);
         }
@@ -113,7 +113,7 @@ router.beforeEach(async (to, from, next) => {
         return next();
     } catch {
         SessionStorageService.clearUserSession();
-        return next({ name: 'loginRoute' });
+        return next({ name: 'loginRoute', query: { redirect: to.fullPath } });
     }
 });
 

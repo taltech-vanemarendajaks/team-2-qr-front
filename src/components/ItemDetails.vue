@@ -19,12 +19,15 @@
         <label class="detail-label" for="item-date">Purchase Date*</label>
         <VueDatePicker
             v-model="localDate"
-            :enable-time-picker="false"
+            class="detail-datepicker"
+            :class="{ 'detail-datepicker--error': validationErrors?.itemDate }"
+            :time-config="{ enableTimePicker: false }"
+            :locale="enGB"
+            auto-apply
             :max-date="today"
             :week-start="1"
             :disabled="isView"
-            format="dd/MM/yyyy"
-            :input-class-name="validationErrors?.itemDate ? 'detail-input detail-input--error' : 'detail-input'"
+            :formats="{ input: 'dd/MM/yyyy' }"
         />
       </div>
 
@@ -75,8 +78,9 @@
 <script>
 import ItemImage from "@/components/ItemImage.vue";
 import ImageInput from "@/components/inputs/ImageInput.vue";
-import VueDatePicker from '@vuepic/vue-datepicker';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { enGB } from 'date-fns/locale';
 
 export default {
   name: "ItemDetails",
@@ -92,6 +96,9 @@ export default {
     today() {
       return new Date();
     },
+    enGB() {
+      return enGB;
+    },
 
     localDate: {
       get() {
@@ -102,13 +109,11 @@ export default {
           this.$emit("event-item-date-updated", "");
           return;
         }
-
-        const year = value.getFullYear();
-        const month = String(value.getMonth() + 1).padStart(2, "0");
-        const day = String(value.getDate()).padStart(2, "0");
-
-        const formatted = `${year}-${month}-${day}`;
-        this.$emit("event-item-date-updated", formatted);
+        const d = new Date(value);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        this.$emit("event-item-date-updated", `${yyyy}-${mm}-${dd}`);
       }
     }
   },
@@ -140,6 +145,7 @@ export default {
         });
       }
     },
+
   }
 };
 </script>

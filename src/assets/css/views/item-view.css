@@ -196,6 +196,63 @@
     align-content: start;
 }
 
+/* ===== Vue DatePicker fix ===== */
+
+.detail-datepicker,
+.detail-datepicker .dp__main,
+.detail-datepicker .dp__input_wrap {
+    width: 100%;
+}
+
+.detail-datepicker .dp__input_wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.detail-datepicker .dp__input {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    height: 3rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 1rem;
+    background: var(--white);
+    color: var(--text);
+    font: inherit;
+    line-height: 1.4;
+    padding: 0.82rem 2.9rem 0.82rem 3.35rem;
+    box-sizing: border-box;
+}
+
+.detail-datepicker .dp__input:focus,
+.detail-datepicker .dp__input_focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem var(--focus-ring);
+}
+
+.detail-datepicker .dp__input_icons,
+.detail-datepicker .dp__input_icon {
+    position: absolute;
+    top: 50%;
+    left: 0.2rem;
+    transform: translateY(-50%);
+}
+
+.detail-datepicker .dp__clear_icon,
+.detail-datepicker .dp--clear-btn {
+    display: none;
+}
+
+.detail-datepicker .dp__disabled {
+    background: var(--card);
+    color: var(--text);
+    opacity: 1;
+    cursor: default;
+}
+
+.detail-datepicker--error .dp__input,
 .detail-input--error {
     border-color: #d64545;
     box-shadow: 0 0 0 0.2rem rgba(214, 69, 69, 0.15);
@@ -208,7 +265,6 @@
     25% { transform: translateX(-2px); }
     75% { transform: translateX(2px); }
 }
-
 
 /* ===== Mobile landscape ===== */
 
@@ -234,13 +290,11 @@
         gap: 1rem;
         align-items: start;
     }
-
 }
 
 /* ===== Desktop override ===== */
 
 @media (min-width: 860px) {
-
     .item-shell > .item-alerts {
         display: grid;
     }
@@ -264,39 +318,81 @@
 
     .item-top {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: center;
-        gap: 1rem;
+        gap: 0.85rem;
     }
 
     .item-title-wrap {
         flex: 0 1 auto;
+        min-width: 0;
     }
 
     .item-title {
         margin: 0;
-        font-size: clamp(2rem, 3vw, 2.7rem);
-        line-height: 1.05;
+        font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+        line-height: 1;
     }
 
     .item-qr-wrap {
-        margin-top: 0.1rem;
+        width: 3.4rem;
+        height: 3.4rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0;
+    }
+
+    .item-qr-wrap .qr-image,
+    .item-qr-wrap .qr-wrapper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .item-qr-wrap svg {
+        width: 100%;
+        height: 100%;
     }
 
     .item-body {
-        gap: 1rem;
-    }
-
-    .item-details {
-        grid-template-columns: minmax(0, 25rem) minmax(12rem, 17rem);
-        justify-content: center;
-        gap: 1.5rem;
+        width: min(100%, 52rem);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 25rem) minmax(14rem, 18rem);
+        grid-template-areas:
+            "details image"
+            "actions image";
+        column-gap: 1.5rem;
+        row-gap: 1rem;
         align-items: start;
     }
 
+    .item-details {
+        display: contents;
+    }
+
     .item-details-form {
-        gap: 0.85rem;
+        grid-area: details;
         max-width: 25rem;
+        gap: 0.75rem;
+    }
+
+    .details-image-panel {
+        grid-area: image;
+        width: 100%;
+        max-width: 18rem;
+        justify-self: start;
+        align-self: start;
+        margin-top: 1.55rem;
+    }
+
+    .item-actions {
+        grid-area: actions;
+        width: 100%;
+        max-width: 25rem;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
     }
 
     .detail-row {
@@ -313,90 +409,54 @@
         border-radius: 0.85rem;
     }
 
+    .detail-datepicker .dp__input {
+        min-height: 2.6rem;
+        height: 2.6rem;
+        padding: 0.7rem 2.9rem 0.7rem 3.35rem;
+        border-radius: 0.85rem;
+    }
+
+    .detail-datepicker .dp__input_icons,
+    .detail-datepicker .dp__input_icon {
+        left: 0.2rem;
+    }
+
+    .detail-datepicker .dp__clear_icon {
+        right: 1.05rem;
+    }
+
     .detail-input--textarea {
         min-height: 5.5rem;
     }
 
-    .details-image-panel {
-        width: 100%;
-        max-width: 17rem;
-        justify-self: start;
-        gap: 0.75rem;
-        align-content: start;
-    }
-
     .item-image__img {
-        max-height: 13.5rem;
+        max-height: 14rem;
     }
 
-    .item-actions {
+    .image-input {
+        width: 100%;
+    }
+
+    .image-input__row {
         justify-content: center;
-        gap: 1rem;
-        margin-top: 1.5rem;
     }
 
-    /* ===== View mode ===== */
-
-    .item-page--view .item-details-form {
-        margin-top: -0.25rem;
-    }
-
-    /* Lift ONLY the form (left column) */
-    .item-page--view .item-details-form {
-        margin-top: -5rem;
-    }
-
-    .item-page--view .item-body {
-        gap: 0.85rem;
-    }
-
-    /* ===== Edit mode ===== */
-
-    .item-page--edit .item-details-form {
-        margin-top: 0;
-    }
-
-    .item-page--edit .item-details-form {
-        margin-top: -5rem;
-    }
-
-    .item-page--edit .item-body {
-        gap: 1rem;
-    }
-
-    .item-page--edit .item-actions {
-        justify-content: flex-start;
-        width: min(100%, 25rem);  /* match form width */
-        margin-left: auto;
-        margin-right: auto;
-
-        margin-top: 1rem;
-
+    .image-input__hint,
+    .image-input__file-name {
+        text-align: left;
     }
 
     /* ===== Add mode ===== */
 
-    .item-page--add .item-top {
-        justify-content: center;
-    }
-
     .item-page--add .item-title {
-        font-size: clamp(1.9rem, 2.8vw, 2.5rem);
-    }
-
-    .item-page--add .item-details-form {
-        margin-top: 0;
-    }
-
-    .item-page--add .item-body {
-        gap: 1rem;
+        font-size: clamp(2.1rem, 3.4vw, 3rem);
     }
 
     .item-page--add .details-image-panel {
-        max-width: 19rem;
+        max-width: 18rem;
     }
 
     .item-page--add .item-image__img {
-        max-height: 15rem;
+        max-height: 14rem;
     }
 }

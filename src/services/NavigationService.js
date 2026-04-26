@@ -46,6 +46,9 @@ export default {
             }
         })
     },
+    navigateTo(path) {
+        safePush(path);
+    },
     navigateToDeleteItemModal(itemId) {
         SessionStorageService.setItemMode('delete');
         safePush({

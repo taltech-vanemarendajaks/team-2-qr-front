@@ -16,7 +16,7 @@
     >
       <QrcodeSvg
           :value="qrCode"
-          :size="100"
+          :size="computedPreviewSize"
           :level="level"
       />
     </button>
