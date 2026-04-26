@@ -219,6 +219,12 @@
           :qr-code="qrCode"
           @event-close-modal="closeQrCodeModal"
       />
+
+      <DeleteItemModal
+          :delete-item-modal-is-open="deleteItemModalIsOpen"
+          @event-close-modal="closeDeleteItemModal"
+          @event-confirm-delete="deleteItem"
+      />
     </div>
   </section>
 </template>
@@ -229,12 +235,13 @@ import ItemsService from "@/services/ItemService";
 import NavigationService from "@/services/NavigationService";
 import QrCodeService from "@/services/QrCodeService";
 import QrCodeModal from "@/modal/QrCodeModal.vue";
+import DeleteItemModal from "@/modal/DeleteItemModal.vue";
 
 import "@/assets/css/views/items.css";
 
 export default {
   name: "ItemsView",
-  components: { QrCodeModal },
+  components: { QrCodeModal, DeleteItemModal },
 
   data() {
     return {
@@ -245,6 +252,8 @@ export default {
       isLoggedIn: false,
       qrCodeModalIsOpen: false,
       qrCode: "",
+      deleteItemModalIsOpen: false,
+      pendingDeleteItemId: null,
       currentPage: 1,
       itemsPerPage: 5,
       isLoading: false
@@ -308,7 +317,24 @@ export default {
     },
 
     navigateToDeleteItemModal(itemId) {
-      NavigationService.navigateToDeleteItemModal(itemId);
+      this.pendingDeleteItemId = itemId;
+      this.deleteItemModalIsOpen = true;
+    },
+
+    closeDeleteItemModal() {
+      this.deleteItemModalIsOpen = false;
+      this.pendingDeleteItemId = null;
+    },
+
+    deleteItem() {
+      ItemsService.sendDeleteItem(this.pendingDeleteItemId)
+          .then(() => {
+            this.closeDeleteItemModal();
+            this.loadItems();
+          })
+          .catch(() => {
+            this.closeDeleteItemModal();
+          });
     },
 
     navigateToQrCodeModal(itemId) {

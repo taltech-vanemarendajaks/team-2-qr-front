@@ -7,14 +7,14 @@
       </div>
 
       <div class="auth-form">
-        <h2 class="change-password-title">Change password</h2>
+        <h2 class="change-password-title">Change Password</h2>
 
         <p class="change-password-rules">
           New password must be at least 8 characters and contain one letter and one number.
         </p>
 
         <div class="change-password-field-group">
-          <p class="change-password-field-label">Current password</p>
+          <label class="change-password-field-label">Current Password*</label>
           <PasswordInput
               :password="currentPassword"
               :password-error="currentPasswordError"
@@ -22,7 +22,7 @@
         </div>
 
         <div class="change-password-field-group">
-          <p class="change-password-field-label">New password</p>
+          <label class="change-password-field-label">New Password*</label>
           <PasswordInput
               :password="newPassword"
               :password-error="newPasswordError"
@@ -30,7 +30,7 @@
         </div>
 
         <div class="change-password-field-group">
-          <p class="change-password-field-label">Confirm new password</p>
+          <label class="change-password-field-label">Confirm New Password*</label>
           <PasswordInput
               :password="confirmPassword"
               :password-error="confirmPasswordError"
@@ -38,11 +38,11 @@
         </div>
 
         <button @click="processChange" type="button" class="auth-submit-btn">
-          Save new password
+          Save New Password
         </button>
 
         <div class="change-password-back-link">
-          <router-link to="/items">← Back to items</router-link>
+          <button type="button" class="modal-button" @click="$router.push('/items')"><font-awesome-icon icon="chevron-left" /> Back to Items</button>
         </div>
       </div>
     </div>

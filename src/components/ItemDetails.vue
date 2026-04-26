@@ -22,11 +22,12 @@
             class="detail-datepicker"
             :class="{ 'detail-datepicker--error': validationErrors?.itemDate }"
             :time-config="{ enableTimePicker: false }"
+            :locale="enGB"
+            auto-apply
             :max-date="today"
             :week-start="1"
             :disabled="isView"
-            :format="formatDateForPicker"
-            model-type="yyyy-MM-dd"
+            :formats="{ input: 'dd/MM/yyyy' }"
         />
       </div>
 
@@ -79,6 +80,7 @@ import ItemImage from "@/components/ItemImage.vue";
 import ImageInput from "@/components/inputs/ImageInput.vue";
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { enGB } from 'date-fns/locale';
 
 export default {
   name: "ItemDetails",
@@ -94,13 +96,24 @@ export default {
     today() {
       return new Date();
     },
+    enGB() {
+      return enGB;
+    },
 
     localDate: {
       get() {
-        return this.item.itemDate ? this.item.itemDate.slice(0, 10) : null;
+        return this.item.itemDate ? new Date(this.item.itemDate) : null;
       },
       set(value) {
-        this.$emit("event-item-date-updated", value || "");
+        if (!value) {
+          this.$emit("event-item-date-updated", "");
+          return;
+        }
+        const d = new Date(value);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        this.$emit("event-item-date-updated", `${yyyy}-${mm}-${dd}`);
       }
     }
   },
@@ -133,20 +146,6 @@ export default {
       }
     },
 
-    formatDateForPicker(value) {
-      if (!value) return "";
-
-      if (typeof value === "string") {
-        const [year, month, day] = value.slice(0, 10).split("-");
-        return `${day}/${month}/${year}`;
-      }
-
-      const day = String(value.getDate()).padStart(2, "0");
-      const month = String(value.getMonth() + 1).padStart(2, "0");
-      const year = value.getFullYear();
-
-      return `${day}/${month}/${year}`;
-    },
   }
 };
 </script>

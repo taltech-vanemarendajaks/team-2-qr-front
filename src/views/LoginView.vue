@@ -134,7 +134,12 @@ export default {
       this.loginResponse = response.data
       SessionStorageService.setLoggedInUser(this.loginResponse)
       this.updateNavMenuUserIsLoggedIn()
-      NavigationService.navigateToItemsView()
+      const redirect = this.$route.query.redirect
+      if (redirect && redirect.startsWith('/')) {
+        NavigationService.navigateTo(redirect)
+      } else {
+        NavigationService.navigateToItemsView()
+      }
     },
 
     updateNavMenuUserIsLoggedIn() {

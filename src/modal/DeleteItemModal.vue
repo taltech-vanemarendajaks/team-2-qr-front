@@ -34,6 +34,7 @@ import Modal from "@/modal/Modal.vue";
 export default {
   name: "DeleteItemModal",
   components: { Modal },
+  emits: ['event-close-modal', 'event-confirm-delete'],
   props: {
     deleteItemModalIsOpen: Boolean
   },
