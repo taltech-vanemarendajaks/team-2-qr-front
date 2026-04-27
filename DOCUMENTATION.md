@@ -41,7 +41,7 @@
 | Language | JavaScript (ES6+) |
 | Routing | Vue Router 4 |
 | HTTP client | Axios 1.7.9 + vue-axios 3.5.2 |
-| UI framework | Bootstrap 5.3.3 |
+| UI framework | Vue |
 | Icons | Font Awesome 6.7.2 (`@fortawesome/vue-fontawesome`) |
 | Date picker | @vuepic/vue-datepicker 12.1.0 |
 | QR code rendering | qrcode.vue 3.6.0 |
@@ -57,7 +57,7 @@
 ```
 Browser (Vue 3 SPA — localhost:8081)
   └── Vue Router (client-side navigation + route guards)
-        └── Views & Components (Bootstrap UI, Font Awesome icons)
+        └── Views & Components (Vue, Font Awesome icons)
               └── Service layer (Axios with CSRF headers, sessionStorage)
                     └── HTTP proxy → Backend API (localhost:8080)
 ```
@@ -434,7 +434,6 @@ There is no `.env` file committed to the repository. The frontend has no runtime
 ### Styling
 - Global styles go in `src/assets/css/base.css`
 - Feature-scoped styles go in their own CSS file (`item-view.css`, `modal.css`, etc.) imported in `main.js`
-- Bootstrap utility classes are preferred; custom CSS only when Bootstrap doesn't cover it
 - Avoid inline styles
 
 ### API Communication
