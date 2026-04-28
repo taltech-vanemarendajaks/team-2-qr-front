@@ -256,7 +256,7 @@ export default {
       pendingDeleteItemId: null,
       currentPage: 1,
       itemsPerPage: 5,
-      isLoading: false
+      isLoading: false,
     };
   },
 

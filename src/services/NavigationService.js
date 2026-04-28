@@ -15,6 +15,9 @@ export default {
     navigateToChangePasswordView() {
         safePush({name: 'changePasswordRoute'})
     },
+    navigateToAdminView() {
+        safePush({name: 'adminRoute'})
+    },
     navigateToItemsView() {
         safePush({name: 'itemsRoute'})
     },
