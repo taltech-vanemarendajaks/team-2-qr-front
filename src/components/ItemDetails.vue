@@ -125,6 +125,7 @@
           ref="imageInput"
           :reset-image-input="resetImageInput"
           :has-image="!!item.imageData"
+          :existing-image-data="item.imageData"
           @event-new-image-selected="onNewImageSelected"
           @event-chosen-image-cleared="onImageCleared"
       />
