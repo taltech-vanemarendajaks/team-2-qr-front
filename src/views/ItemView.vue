@@ -50,6 +50,8 @@
               @event-item-date-updated="setItemItemDate"
               @event-item-model-updated="setItemModel"
               @event-item-comment-updated="setItemComment"
+              @event-item-warranty-end-date-updated="setItemWarrantyEndDate"
+              @event-warranty-notify-at-updated="setWarrantyNotifyAt"
               @event-new-image-selected="setItemImageData"
               @event-chosen-image-cleared="handleDeleteImage"
           />
@@ -167,7 +169,9 @@ export default {
         comment: "",
         imageData: "",
         imageId: null,
-        qrToken: ""
+        qrToken: "",
+        warrantyEndDate: null,
+        warrantyNotifyAt: null
       },
 
       validationErrors: {
@@ -259,6 +263,12 @@ export default {
         if (!this.errorMessage) {
           this.errorMessage = "Please fill in required fields";
         }
+        return false;
+      }
+
+      const notifyValid = this.$refs.itemDetails?.validateNotification?.() ?? true;
+      if (!notifyValid) {
+        this.errorMessage = "Please check the warranty notification settings";
         return false;
       }
 
@@ -415,6 +425,14 @@ export default {
       this.item.comment = comment;
     },
 
+    setItemWarrantyEndDate(warrantyEndDate) {
+      this.item.warrantyEndDate = warrantyEndDate;
+    },
+
+    setWarrantyNotifyAt(warrantyNotifyAt) {
+      this.item.warrantyNotifyAt = warrantyNotifyAt;
+    },
+
     resetAllFields() {
       this.item.itemName = "";
       this.item.itemDate = "";
@@ -422,6 +440,8 @@ export default {
       this.item.comment = "";
       this.item.imageData = "";
       this.item.imageId = null;
+      this.item.warrantyEndDate = null;
+      this.item.warrantyNotifyAt = null;
       this.resetImageInput = true;
     },
 

@@ -35,6 +35,9 @@
             <button type="button" class="settings-dropdown-item" @click="goToChangePassword">
               Change password
             </button>
+            <button v-if="isAdmin" type="button" class="settings-dropdown-item" @click="goToAdminPanel">
+              Admin panel
+            </button>
           </div>
         </div>
         <button
@@ -157,6 +160,11 @@ export default defineComponent({
     goToChangePassword() {
       this.closeSettingsMenu()
       NavigationService.navigateToChangePasswordView()
+    },
+
+    goToAdminPanel() {
+      this.closeSettingsMenu()
+      NavigationService.navigateToAdminView()
     },
 
     updateNavMenu() {

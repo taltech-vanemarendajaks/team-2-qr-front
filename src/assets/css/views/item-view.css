@@ -190,6 +190,102 @@
     resize: vertical;
 }
 
+.notify-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.notify-days-input {
+    width: 5rem;
+    min-width: 0;
+    text-align: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.notify-hour-select {
+    width: 6.5rem;
+    min-width: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    cursor: pointer;
+    appearance: auto;
+}
+
+.notify-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.notify-toggle input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.notify-toggle-track {
+    position: relative;
+    width: 2.4rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    background: var(--line-strong);
+    flex-shrink: 0;
+    transition: background 0.18s ease;
+}
+
+.notify-toggle input:checked ~ .notify-toggle-track {
+    background: var(--primary);
+}
+
+.notify-toggle-thumb {
+    position: absolute;
+    top: 0.17rem;
+    left: 0.17rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    transition: transform 0.18s ease;
+}
+
+.notify-toggle input:checked ~ .notify-toggle-track .notify-toggle-thumb {
+    transform: translateX(1.05rem);
+}
+
+.notify-label {
+    font-size: 0.95rem;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.notify-hint {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.notify-error {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    color: #8a2f2f;
+    line-height: 1.4;
+}
+
+.detail-notify-text {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text);
+    padding: 0.5rem 0;
+}
+
 .details-image-panel {
     display: grid;
     gap: 0.9rem;
@@ -243,6 +339,17 @@
 .detail-datepicker .dp__clear_icon,
 .detail-datepicker .dp--clear-btn {
     display: none;
+}
+
+.detail-datepicker--clearable .dp--clear-btn {
+    display: inline-flex;
+}
+
+.detail-datepicker--clearable .dp--clear-btn .dp__input_icons {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
 }
 
 .detail-datepicker .dp__disabled {
